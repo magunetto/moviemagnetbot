@@ -10,15 +10,15 @@ import (
 	"time"
 
 	rarbg "github.com/umayr/go-torrentapi"
-	tb "gopkg.in/tucnak/telebot.v2"
+	bot "gopkg.in/tucnak/telebot.v2"
 )
 
 func main() {
 
 	// init telebot
-	b, err := tb.NewBot(tb.Settings{
+	b, err := bot.NewBot(bot.Settings{
 		Token:  os.Getenv("MOVIE_MAGNET_BOT_TOKEN"),
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
+		Poller: &bot.LongPoller{Timeout: 10 * time.Second},
 	})
 	if err != nil {
 		log.Fatalf("error while creating telebot: %s", err)
@@ -33,22 +33,22 @@ func main() {
 	}
 
 	// handlers
-	b.Handle("/start", func(m *tb.Message) {
+	b.Handle("/start", func(m *bot.Message) {
 		b.Send(m.Sender, "I find movies for you.\nTalk to me like this:\n/imdb tt0137523")
 	})
 
-	b.Handle("/imdb", func(m *tb.Message) {
+	b.Handle("/imdb", func(m *bot.Message) {
 		buf := new(bytes.Buffer)
 		imdbHandler(buf, m, api)
 
 		b.Send(m.Sender, buf.String(),
-			&tb.SendOptions{ParseMode: tb.ModeMarkdown})
+			&bot.SendOptions{ParseMode: bot.ModeMarkdown})
 	})
 
 	b.Start()
 }
 
-func imdbHandler(w io.Writer, m *tb.Message, api *rarbg.API) {
+func imdbHandler(w io.Writer, m *bot.Message, api *rarbg.API) {
 
 	// get keyword from message
 	keyword := strings.Split(m.Text, " ")[1]

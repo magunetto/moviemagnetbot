@@ -1,3 +1,9 @@
+# eidtor
+.vscode
+
+# dependencies
 vendor
 
+# bin
 moviemagnetbot
+debug

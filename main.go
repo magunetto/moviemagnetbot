@@ -2,15 +2,18 @@ package main
 
 import (
 	"bytes"
-	"fmt"
-	"io"
 	"log"
 	"os"
-	"strings"
+	"regexp"
 	"time"
 
 	rarbg "github.com/umayr/go-torrentapi"
 	bot "gopkg.in/tucnak/telebot.v2"
+)
+
+const (
+	helpText  = "What movies do you like? Just send IMDb links to me"
+	errorText = "An error occurred, please try again"
 )
 
 func main() {
@@ -22,48 +25,42 @@ func main() {
 	})
 	if err != nil {
 		log.Fatalf("error while creating telebot: %s", err)
-		return
 	}
+	log.Printf("telebot inited")
 
 	// init rarbg
 	api, err := rarbg.New()
 	if err != nil {
 		log.Fatalf("error while querying rarbg: %s", err)
-		return
 	}
+	log.Printf("rarbg inited")
 
 	// handlers
 	b.Handle("/start", func(m *bot.Message) {
-		b.Send(m.Sender, "I find movies for you.\nTalk to me like this:\n/imdb tt0137523")
+		b.Send(m.Sender, helpText)
+	})
+	b.Handle("/help", func(m *bot.Message) {
+		b.Send(m.Sender, helpText)
 	})
 
-	b.Handle("/imdb", func(m *bot.Message) {
-		buf := new(bytes.Buffer)
-		imdbHandler(buf, m, api)
+	b.Handle(bot.OnText, func(m *bot.Message) {
+		log.Printf("someone queried: %s", m.Text)
 
-		b.Send(m.Sender, buf.String(),
-			&bot.SendOptions{ParseMode: bot.ModeMarkdown})
+		// find all IMDb id in the message
+		re, _ := regexp.Compile("tt[0-9]{7}") // e.g. tt0137523
+		imdbIDs := re.FindAllString(m.Text, -1)
+		if len(imdbIDs) == 0 {
+			b.Send(m.Sender, helpText)
+			return
+		}
+
+		// search movies by them
+		for _, id := range imdbIDs {
+			result := new(bytes.Buffer)
+			searchIMDb(result, id, api)
+			b.Send(m.Sender, result.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+		}
 	})
 
 	b.Start()
-}
-
-func imdbHandler(w io.Writer, m *bot.Message, api *rarbg.API) {
-
-	// get keyword from message
-	keyword := strings.Split(m.Text, " ")[1]
-	log.Printf("someone searched: %s", keyword)
-
-	// search it
-	results, err := search(api, "imdb", keyword)
-	if err != nil {
-		fmt.Fprintln(w, "error while querying torrentapi: ", err)
-		return
-	}
-	fmt.Fprintln(w, "Seeders / Leechers / Size / File Name")
-	for _, r := range results {
-		magnet := strings.Split(r.Download, "&")[0]
-		fmt.Fprintf(w, "`%d` / `%d` / `%s` / `%s` / `%s`\n", r.Seeders, r.Leechers, humanizeSize(r.Size), r.Title, magnet)
-	}
-	return
 }

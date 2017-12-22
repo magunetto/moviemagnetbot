@@ -14,6 +14,12 @@
   version = "v0.8.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/umayr/go-torrentapi"
+  packages = ["."]
+  revision = "bc9e05d369264380c8094ade72a763ca5f5438f4"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
   packages = ["."]
@@ -22,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5f36593ebc4215040bb7875ae1b0ff160434efc69b6d90bc611f8dba6b6335f8"
+  inputs-digest = "0a613579d0abc8a09c31bd34bffafae94311c17fad1d65aa142c6ca719106f25"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -14,10 +14,11 @@ import (
 )
 
 const (
-	helpText     = "What movies do you like? Just send IMDb links to me"
-	notfoundText = "Magnet link not found, please resend IMDb links"
-	errorText    = "An error occurred, please try again"
-	dlPrefix     = "/dl"
+	helpText       = "What movies do you like? Just send IMDb links to me"
+	noIMDbText     = "No IMDb info found, please send correct IMDb links"
+	noTorrentsText = "We have no torrents for this movie now, please come back later"
+	errorText      = "An error occurred, please try again"
+	dlPrefix       = "/dl"
 )
 
 func main() {
@@ -69,18 +70,18 @@ func main() {
 func handleDownload(b *bot.Bot, m *bot.Message, magnets map[int64]string) {
 	commands := strings.Split(m.Text, dlPrefix)
 	if len(commands) < 2 {
-		b.Send(m.Sender, notfoundText)
+		b.Send(m.Sender, noIMDbText)
 		return
 	}
 	time, err := strconv.Atoi(commands[1])
 	if err != nil {
 		log.Printf("error while parsing timestamp: %s", err)
-		b.Send(m.Sender, notfoundText)
+		b.Send(m.Sender, noIMDbText)
 		return
 	}
 	magnet := magnets[int64(time)]
 	if magnet == "" {
-		b.Send(m.Sender, notfoundText)
+		b.Send(m.Sender, noIMDbText)
 		return
 	}
 

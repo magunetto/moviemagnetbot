@@ -21,8 +21,13 @@ func searchIMDb(w io.Writer, magnets map[int64]string, id string, api *rarbg.API
 	// search torrents for a movie
 	results, err := search(api, "imdb", id)
 	if err != nil {
-		log.Printf("error while querying torrentapi: %s", err)
+		log.Printf("error while querying rarbg: %s", err)
 		fmt.Fprintln(w, errorText)
+		return
+	}
+	if len(results) == 0 {
+		log.Printf("no torrents found for this movie: %s", id)
+		fmt.Fprintln(w, noTorrentsText)
 		return
 	}
 	fmt.Fprintf(w, "§ `%s`\n", id)

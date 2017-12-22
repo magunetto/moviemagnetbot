@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	rarbg "github.com/umayr/go-torrentapi"
@@ -12,8 +14,10 @@ import (
 )
 
 const (
-	helpText  = "What movies do you like? Just send IMDb links to me"
-	errorText = "An error occurred, please try again"
+	helpText     = "What movies do you like? Just send IMDb links to me"
+	notfoundText = "Magnet link not found, please resend IMDb links"
+	errorText    = "An error occurred, please try again"
+	dlPrefix     = "/dl"
 )
 
 func main() {
@@ -35,6 +39,9 @@ func main() {
 	}
 	log.Printf("rarbg inited")
 
+	// magnet links cache
+	magnets := make(map[int64]string)
+
 	// handlers
 	b.Handle("/start", func(m *bot.Message) {
 		b.Send(m.Sender, helpText)
@@ -46,21 +53,50 @@ func main() {
 	b.Handle(bot.OnText, func(m *bot.Message) {
 		log.Printf("someone queried: %s", m.Text)
 
-		// find all IMDb id in the message
-		re, _ := regexp.Compile("tt[0-9]{7}") // e.g. tt0137523
-		imdbIDs := re.FindAllString(m.Text, -1)
-		if len(imdbIDs) == 0 {
-			b.Send(m.Sender, helpText)
+		// download requst
+		if strings.HasPrefix(m.Text, dlPrefix) {
+			handleDownload(b, m, magnets)
 			return
 		}
 
-		// search movies by them
-		for _, id := range imdbIDs {
-			result := new(bytes.Buffer)
-			searchIMDb(result, id, api)
-			b.Send(m.Sender, result.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
-		}
+		// search request
+		handleSearch(b, m, magnets, api)
 	})
 
 	b.Start()
+}
+
+func handleDownload(b *bot.Bot, m *bot.Message, magnets map[int64]string) {
+	commands := strings.Split(m.Text, dlPrefix)
+	if len(commands) < 2 {
+		b.Send(m.Sender, notfoundText)
+		return
+	}
+	time, err := strconv.Atoi(commands[1])
+	if err != nil {
+		log.Printf("error while parsing timestamp: %s", err)
+		b.Send(m.Sender, notfoundText)
+		return
+	}
+	magnet := magnets[int64(time)]
+	if magnet == "" {
+		b.Send(m.Sender, notfoundText)
+		return
+	}
+
+	b.Send(m.Sender, "`"+magnet+"`", &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+}
+
+func handleSearch(b *bot.Bot, m *bot.Message, magnets map[int64]string, api *rarbg.API) {
+	re, _ := regexp.Compile("tt[0-9]{7}") // e.g. tt0137523
+	imdbIDs := re.FindAllString(m.Text, -1)
+	if len(imdbIDs) == 0 {
+		b.Send(m.Sender, helpText)
+		return
+	}
+	for _, id := range imdbIDs {
+		result := new(bytes.Buffer)
+		searchIMDb(result, magnets, id, api)
+		b.Send(m.Sender, result.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+	}
 }

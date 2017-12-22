@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"strings"
+	"time"
 
 	rarbg "github.com/umayr/go-torrentapi"
 )
@@ -16,7 +16,7 @@ const (
 	limit  = 25              // Limit of results (25, 50, 100)
 )
 
-func searchIMDb(w io.Writer, id string, api *rarbg.API) {
+func searchIMDb(w io.Writer, magnets map[int64]string, id string, api *rarbg.API) {
 
 	// search torrents for a movie
 	results, err := search(api, "imdb", id)
@@ -25,14 +25,21 @@ func searchIMDb(w io.Writer, id string, api *rarbg.API) {
 		fmt.Fprintln(w, errorText)
 		return
 	}
-	fmt.Fprintln(w, "Results for *", id, "*")
-	fmt.Fprintln(w, "Seeders / Leechers / Size / File Name")
+	fmt.Fprintf(w, "§ `%s`\n", id)
 
 	// output every torrent
 	for _, r := range results {
-		magnet := strings.Split(r.Download, "&")[0]
-		fmt.Fprintf(w, "`%d` / `%d` / `%s` / `%s` / `%s`\n",
-			r.Seeders, r.Leechers, humanizeSize(r.Size), r.Title, magnet)
+
+		// cache the download link
+		t, err := time.Parse("2006-01-02 15:04:05 +0000", r.PubDate)
+		if err != nil {
+			log.Printf("error while parsing date: %s", err)
+		}
+		magnets[t.Unix()] = r.Download
+		command := fmt.Sprintf("%s%d", dlPrefix, t.Unix())
+
+		fmt.Fprintf(w, "*%d*↑ *%d*↓ ∑`%s` %s\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command)
+		fmt.Fprintf(w, "%s\n", r.Title)
 	}
 }
 

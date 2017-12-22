@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	api "github.com/umayr/go-torrentapi"
+	rarbg "github.com/umayr/go-torrentapi"
 )
 
 const (
@@ -13,7 +13,7 @@ const (
 	limit  = 25              // Limit of results (25, 50, 100)
 )
 
-func search(api *api.API, clue string, keyword string) (results api.TorrentResults, err error) {
+func search(api *rarbg.API, clue string, keyword string) (results rarbg.TorrentResults, err error) {
 	switch clue {
 	case "tvdb":
 		api.SearchTVDB(keyword)

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	torrentapi "github.com/umayr/go-torrentapi"
+	rarbg "github.com/umayr/go-torrentapi"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -25,10 +25,10 @@ func main() {
 		return
 	}
 
-	// init torrentapi
-	api, err := torrentapi.New()
+	// init rarbg
+	api, err := rarbg.New()
 	if err != nil {
-		log.Fatalf("error while querying torrentapi: %s", err)
+		log.Fatalf("error while querying rarbg: %s", err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func main() {
 	b.Start()
 }
 
-func imdbHandler(w io.Writer, m *tb.Message, api *torrentapi.API) {
+func imdbHandler(w io.Writer, m *tb.Message, api *rarbg.API) {
 
 	// get keyword from message
 	keyword := strings.Split(m.Text, " ")[1]

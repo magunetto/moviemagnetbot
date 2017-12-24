@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	rarbg "github.com/umayr/go-torrentapi"
+	rarbg "github.com/qopher/go-torrentapi"
 	bot "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -34,7 +34,7 @@ func main() {
 	log.Printf("telebot inited")
 
 	// init rarbg
-	api, err := rarbg.New()
+	api, err := rarbg.Init()
 	if err != nil {
 		log.Fatalf("error while querying rarbg: %s", err)
 	}

@@ -15,9 +15,9 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/umayr/go-torrentapi"
+  name = "github.com/qopher/go-torrentapi"
   packages = ["."]
-  revision = "bc9e05d369264380c8094ade72a763ca5f5438f4"
+  revision = "060f33e1941e80a93aeef5f81ea7f8aff0bb6b71"
 
 [[projects]]
   branch = "v2"
@@ -28,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0a613579d0abc8a09c31bd34bffafae94311c17fad1d65aa142c6ca719106f25"
+  inputs-digest = "85d500d6724b9eaf57c2d7c850f8e175e01a1674d58e9b93b3c3f317ea3648a7"
   solver-name = "gps-cdcl"
   solver-version = 1

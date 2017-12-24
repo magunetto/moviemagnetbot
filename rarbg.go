@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	rarbg "github.com/umayr/go-torrentapi"
+	rarbg "github.com/qopher/go-torrentapi"
 )
 
 const (

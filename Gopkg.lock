@@ -3,9 +3,9 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/mitchellh/hashstructure"
+  name = "github.com/idealhack/go-torrentapi"
   packages = ["."]
-  revision = "2bca23e0e452137f789efbc8610126fd8b94f73b"
+  revision = "e3b233133e9f2bb5c27e1b6c25bed24bd818bd4f"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -14,20 +14,14 @@
   version = "v0.8.0"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/qopher/go-torrentapi"
-  packages = ["."]
-  revision = "060f33e1941e80a93aeef5f81ea7f8aff0bb6b71"
-
-[[projects]]
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
   packages = ["."]
-  revision = "25672b8f68e9c1135db1e80a21d550f01ceaa0ef"
+  revision = "fd49f3f2600037b57ee38200b479796e1c14c590"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "85d500d6724b9eaf57c2d7c850f8e175e01a1674d58e9b93b3c3f317ea3648a7"
+  inputs-digest = "c37b74146493047be18922dbf7d773d151b027b0aa703e3e7637100ecc0ef3b2"
   solver-name = "gps-cdcl"
   solver-version = 1

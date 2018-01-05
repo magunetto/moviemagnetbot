@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	rarbg "github.com/qopher/go-torrentapi"
+	rarbg "github.com/idealhack/go-torrentapi"
 )
 
 const (
@@ -18,7 +18,7 @@ const (
 
 func searchIMDb(w io.Writer, magnets map[int64]string, id string, api *rarbg.API) {
 
-	// search torrents for a movie
+	// search torrents by imdb id
 	results, err := search(api, "imdb", id)
 	if err != nil {
 		log.Printf("error while querying rarbg: %s", err)
@@ -53,7 +53,7 @@ func search(api *rarbg.API, clue string, keyword string) (results rarbg.TorrentR
 	case "tvdb":
 		api.SearchTVDB(keyword)
 	case "imdb":
-		api.SearchImDB(keyword)
+		api.SearchIMDb(keyword)
 	case "search":
 		api.SearchString(keyword)
 	}

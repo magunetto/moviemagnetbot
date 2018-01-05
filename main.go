@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	rarbg "github.com/qopher/go-torrentapi"
+	rarbg "github.com/idealhack/go-torrentapi"
 	bot "gopkg.in/tucnak/telebot.v2"
 )
 

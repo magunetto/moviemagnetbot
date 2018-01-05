@@ -12,6 +12,10 @@ import (
 
 func main() {
 
+	// init db
+	initModel()
+	log.Printf("postgres inited")
+
 	// init telebot
 	b, err := bot.NewBot(bot.Settings{
 		Token:  os.Getenv("MOVIE_MAGNET_BOT_TOKEN"),
@@ -29,9 +33,6 @@ func main() {
 	}
 	log.Printf("rarbg inited")
 
-	// magnet links cache
-	magnets := make(map[int64]string)
-
 	// handlers
 	b.Handle("/start", func(m *bot.Message) {
 		b.Send(m.Sender, helpText)
@@ -39,18 +40,17 @@ func main() {
 	b.Handle("/help", func(m *bot.Message) {
 		b.Send(m.Sender, helpText)
 	})
-
 	b.Handle(bot.OnText, func(m *bot.Message) {
 		log.Printf("someone queried: %s", m.Text)
 
 		// download requst
 		if strings.HasPrefix(m.Text, dlPrefix) {
-			handleDownload(b, m, magnets)
+			handleDownload(b, m)
 			return
 		}
 
 		// search request
-		handleSearch(b, m, magnets, api)
+		handleSearch(b, m, api)
 	})
 
 	b.Start()

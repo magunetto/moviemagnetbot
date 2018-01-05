@@ -16,10 +16,13 @@ const (
 	noIMDbText     = "No IMDb info found, please send correct IMDb links"
 	noTorrentsText = "We have no torrents for this movie now, please come back later"
 	errorText      = "An error occurred, please try again"
+	taskAddedText  = "You can use this magnet link as you want, we’ll also provide a RSS feed of all your tasks soon"
 	dlPrefix       = "/dl"
 )
 
-func handleDownload(b *bot.Bot, m *bot.Message, magnets map[int64]string) {
+func handleDownload(b *bot.Bot, m *bot.Message) {
+
+	// get `PubDate` from command
 	commands := strings.Split(m.Text, dlPrefix)
 	if len(commands) < 2 {
 		b.Send(m.Sender, noIMDbText)
@@ -31,16 +34,25 @@ func handleDownload(b *bot.Bot, m *bot.Message, magnets map[int64]string) {
 		b.Send(m.Sender, noIMDbText)
 		return
 	}
-	magnet := magnets[int64(time)]
-	if magnet == "" {
+
+	// get task by `PubDate`
+	task := &Task{PubDate: int64(time)}
+	task, err = task.getByPubDate()
+	if err != nil {
+		log.Printf("error while getting task: %s", err)
 		b.Send(m.Sender, noIMDbText)
 		return
 	}
+	magnet := &task.Magnet
+	b.Send(m.Sender, "`"+*magnet+"`", &bot.SendOptions{ParseMode: bot.ModeMarkdown})
 
-	b.Send(m.Sender, "`"+magnet+"`", &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+	// save the task for user
+	user := &User{TelegramID: m.Sender.ID}
+	user.appendTask(task)
+	b.Send(m.Sender, taskAddedText)
 }
 
-func handleSearch(b *bot.Bot, m *bot.Message, magnets map[int64]string, api *rarbg.API) {
+func handleSearch(b *bot.Bot, m *bot.Message, api *rarbg.API) {
 	re, _ := regexp.Compile("tt[0-9]{7}") // e.g. tt0137523
 	imdbIDs := re.FindAllString(m.Text, -1)
 	if len(imdbIDs) == 0 {
@@ -49,7 +61,7 @@ func handleSearch(b *bot.Bot, m *bot.Message, magnets map[int64]string, api *rar
 	}
 	for _, id := range imdbIDs {
 		result := new(bytes.Buffer)
-		searchIMDb(result, magnets, id, api)
+		searchIMDb(result, id, api)
 		b.Send(m.Sender, result.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
 	}
 }

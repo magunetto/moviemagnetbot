@@ -16,7 +16,7 @@ const (
 	limit  = 25              // Limit of results (25, 50, 100)
 )
 
-func searchIMDb(w io.Writer, magnets map[int64]string, id string, api *rarbg.API) {
+func searchIMDb(w io.Writer, id string, api *rarbg.API) {
 
 	// search torrents by imdb id
 	results, err := search(api, "imdb", id)
@@ -32,19 +32,25 @@ func searchIMDb(w io.Writer, magnets map[int64]string, id string, api *rarbg.API
 	}
 	fmt.Fprintf(w, "§ `%s`\n", id)
 
-	// output every torrent
+	// output torrents
 	for _, r := range results {
 
-		// cache the download link
+		// use `PubDate` as an unique command for each torrent
 		t, err := time.Parse("2006-01-02 15:04:05 +0000", r.PubDate)
 		if err != nil {
 			log.Printf("error while parsing date: %s", err)
 		}
-		magnets[t.Unix()] = r.Download
 		command := fmt.Sprintf("%s%d", dlPrefix, t.Unix())
-
 		fmt.Fprintf(w, "*%d*↑ *%d*↓ ∑`%s` %s\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command)
 		fmt.Fprintf(w, "%s\n", r.Title)
+
+		// create task for torrent
+		task := &Task{
+			Title:   r.Title,
+			Magnet:  r.Download,
+			PubDate: t.Unix(),
+		}
+		task.create()
 	}
 }
 

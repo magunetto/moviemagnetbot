@@ -2,10 +2,22 @@
 
 
 [[projects]]
+  name = "github.com/go-pg/pg"
+  packages = [".","internal","internal/parser","internal/pool","orm","types"]
+  revision = "fc91a7fbbb5dde827c24ef45b8705943a5c197b9"
+  version = "v6.6.23"
+
+[[projects]]
   branch = "master"
   name = "github.com/idealhack/go-torrentapi"
   packages = ["."]
   revision = "e3b233133e9f2bb5c27e1b6c25bed24bd818bd4f"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jinzhu/inflection"
+  packages = ["."]
+  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -22,6 +34,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c37b74146493047be18922dbf7d773d151b027b0aa703e3e7637100ecc0ef3b2"
+  inputs-digest = "8e5371f2625f3bdf041a8be1b93947e1267ca22d9544ed9e9eaf1ca70216a537"
   solver-name = "gps-cdcl"
   solver-version = 1

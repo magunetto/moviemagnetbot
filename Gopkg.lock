@@ -11,7 +11,7 @@
   branch = "master"
   name = "github.com/idealhack/go-torrentapi"
   packages = ["."]
-  revision = "e3b233133e9f2bb5c27e1b6c25bed24bd818bd4f"
+  revision = "c2588255ae07b3e511660c8291353ad5af7b3c09"
 
 [[projects]]
   branch = "master"

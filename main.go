@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/gorilla/mux"
 	rarbg "github.com/idealhack/go-torrentapi"
 	bot "gopkg.in/tucnak/telebot.v2"
 )
@@ -33,15 +36,18 @@ func main() {
 	}
 	log.Printf("rarbg inited")
 
-	// handlers
+	// bot handlers
 	b.Handle("/start", func(m *bot.Message) {
 		b.Send(m.Sender, helpText)
 	})
 	b.Handle("/help", func(m *bot.Message) {
 		b.Send(m.Sender, helpText)
 	})
+	b.Handle("/feed", func(m *bot.Message) {
+		b.Send(m.Sender, fmt.Sprintf(feedText, m.Sender.ID))
+	})
 	b.Handle(bot.OnText, func(m *bot.Message) {
-		log.Printf("someone queried: %s", m.Text)
+		log.Printf("@%s: %s", m.Sender.Username, m.Text)
 
 		// download requst
 		if strings.HasPrefix(m.Text, dlPrefix) {
@@ -52,6 +58,13 @@ func main() {
 		// search request
 		handleSearch(b, m, api)
 	})
+	// bot loop
+	go b.Start()
 
-	b.Start()
+	// http handlers
+	r := mux.NewRouter()
+	r.HandleFunc("/tasks/{user}.xml", feedHandler)
+
+	// http loop
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }

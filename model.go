@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/go-pg/pg"
 )
@@ -13,6 +14,7 @@ type Task struct {
 	Title   string
 	Magnet  string
 	PubDate int64
+	Created time.Time
 }
 
 // User (i.e. Downloader)
@@ -33,7 +35,7 @@ func initModel() {
 		// heroku
 		opt, err := pg.ParseURL(dbURL)
 		if err != nil {
-			log.Fatalf("error while connecting database: %s", err)
+			log.Fatalf("error while parsing url: %s", err)
 		}
 		db = pg.Connect(opt)
 	}
@@ -78,7 +80,7 @@ func (user *User) create() {
 		OnConflict("DO NOTHING").
 		SelectOrInsert()
 	if err != nil {
-		log.Printf("error while getting user: %s", err)
+		log.Printf("error while creating user: %s", err)
 	}
 }
 
@@ -89,4 +91,12 @@ func (user *User) appendTask(task *Task) {
 	if err != nil {
 		log.Printf("error while appending task: %s", err)
 	}
+}
+
+func (user *User) getByTelegram() (*User, error) {
+	err := db.Model(user).Where("telegram_id = ?", user.TelegramID).Select()
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

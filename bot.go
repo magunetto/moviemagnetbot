@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/idealhack/moviemagnetbot/douban"
+
 	rarbg "github.com/idealhack/go-torrentapi"
 	bot "gopkg.in/tucnak/telebot.v2"
 )
@@ -21,6 +23,7 @@ const (
 	taskAddedText  = "You can use this magnet link as you want, but we also have a RSS feed for you: /feed"
 	feedText       = "Your RSS feed URL is " + host + "/tasks/%d.xml, you can subscribe it in your download tools"
 	dlPrefix       = "/dl"
+	replyNoIMDbIDS = "We encountered an error while finding IMDB IDs for you: "
 )
 
 func handleDownload(b *bot.Bot, m *bot.Message) {
@@ -57,15 +60,50 @@ func handleDownload(b *bot.Bot, m *bot.Message) {
 }
 
 func handleSearch(b *bot.Bot, m *bot.Message, api *rarbg.API) {
-	re, _ := regexp.Compile("tt[0-9]{7}") // e.g. tt0137523
-	imdbIDs := re.FindAllString(m.Text, -1)
+	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
+	if err != nil {
+		b.Send(m.Sender, replyNoIMDbIDS+err.Error())
+		return
+	}
 	if len(imdbIDs) == 0 {
 		b.Send(m.Sender, helpText)
 		return
 	}
+
 	for _, id := range imdbIDs {
 		result := new(bytes.Buffer)
 		searchIMDb(result, id, api)
 		b.Send(m.Sender, result.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
 	}
+}
+
+func searchIMDbIDsFromMessage(text string) ([]string, error) {
+	imdbIDs := []string{}
+	// Douban
+	movieLinks := findDoubanMovieURLs(text)
+	for _, url := range movieLinks {
+		movie := douban.NewMovie()
+		if err := movie.FetchFromURL(url); err != nil {
+			return nil, err
+		}
+		imdbIDs = append(imdbIDs, movie.IMDbID())
+	}
+	// IMDB
+	if len(imdbIDs) == 0 {
+		imdbIDs = findIMDbIDs(text)
+	}
+	return imdbIDs, nil
+}
+
+var (
+	reDoubanMovieURL = regexp.MustCompile(`http(s)?\:\/\/movie\.douban\.com\/subject\/[0-9]+`)
+	reIMDbID         = regexp.MustCompile(`tt[0-9]{7}`) // e.g. tt0137523
+)
+
+func findDoubanMovieURLs(s string) []string {
+	return reDoubanMovieURL.FindAllString(s, -1)
+}
+
+func findIMDbIDs(s string) []string {
+	return reIMDbID.FindAllString(s, -1)
 }

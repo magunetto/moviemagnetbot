@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/idealhack/moviemagnetbot.svg)](https://travis-ci.org/idealhack/moviemagnetbot)
+[![Go Report Card](https://goreportcard.com/badge/github.com/idealhack/moviemagnetbot)](https://goreportcard.com/report/github.com/idealhack/moviemagnetbot)
+
 # Movie Magnet Bot
 
 🤖 A telegram bot for downloading movies

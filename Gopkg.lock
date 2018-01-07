@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
+  version = "v1.1.0"
+
+[[projects]]
   name = "github.com/go-pg/pg"
   packages = [".","internal","internal/parser","internal/pool","orm","types"]
   revision = "fc91a7fbbb5dde827c24ef45b8705943a5c197b9"
@@ -44,6 +50,18 @@
   version = "v0.8.0"
 
 [[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  revision = "b91bfb9ebec76498946beb6af7c0230c7cc7ba6c"
+  version = "v1.2.0"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
   packages = ["."]
@@ -52,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d507f02b56f2d44080e155f8d9f30bf67df01e504e27e73518bf68df32c9b93b"
+  inputs-digest = "d5abcf439c6b0dc28394344983cdb44f703ceb60a341948002b23b52de20a46c"
   solver-name = "gps-cdcl"
   solver-version = 1

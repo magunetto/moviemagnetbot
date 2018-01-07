@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/idealhack/moviemagnetbot.svg)](https://travis-ci.org/idealhack/moviemagnetbot)
+[![Coverage Status](https://coveralls.io/repos/github/idealhack/moviemagnetbot/badge.svg?branch=master)](https://coveralls.io/github/idealhack/moviemagnetbot?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/idealhack/moviemagnetbot)](https://goreportcard.com/report/github.com/idealhack/moviemagnetbot)
 
 # Movie Magnet Bot

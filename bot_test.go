@@ -57,6 +57,14 @@ func TestSearchIMDbIDsFromMessageIMDbURLOK(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"tt2527336"}, ids)
 }
+func TestSearchIMDbIDsFromMessageMultipleURLOK(t *testing.T) {
+	ids, err := searchIMDbIDsFromMessage(`
+		http://www.imdb.com/title/tt2527336
+		https://movie.douban.com/subject/22265634
+	`)
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"tt2527336", "tt2527336"}, ids)
+}
 
 func TestSearchIMDbIDsFromMessageDoubanURLOK(t *testing.T) {
 	ids, err := searchIMDbIDsFromMessage(`https://movie.douban.com/subject/22265634/`)

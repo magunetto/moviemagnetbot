@@ -89,9 +89,7 @@ func searchIMDbIDsFromMessage(text string) ([]string, error) {
 		imdbIDs = append(imdbIDs, movie.IMDbID())
 	}
 	// IMDB
-	if len(imdbIDs) == 0 {
-		imdbIDs = findIMDbIDs(text)
-	}
+	imdbIDs = append(imdbIDs, findIMDbIDs(text)...)
 	return imdbIDs, nil
 }
 

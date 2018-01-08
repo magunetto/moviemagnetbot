@@ -37,6 +37,6 @@ func TestMovieParseHTMLOK(t *testing.T) {
 func TestMovieParseHTMLMissingIMDbURL(t *testing.T) {
 	m := NewMovie()
 	err := m.ParseHTML([]byte(movieHTMLMissingIMDbURL))
-	assert.Equal(t, err, ErrIMDbUrlMissing)
+	assert.Equal(t, err, ErrIMDbURLMissing)
 	assert.Equal(t, "", m.IMDbID())
 }

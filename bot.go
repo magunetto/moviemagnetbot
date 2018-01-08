@@ -17,13 +17,14 @@ import (
 
 const (
 	host           = "https://moviemagnetbot.herokuapp.com"
-	helpText       = "What movies do you like? Just send IMDb links to me"
-	noIMDbText     = "No IMDb info found, please send correct IMDb links"
+	helpText       = "What movies do you like? Send IMDb or Douban links to me"
 	noTorrentsText = "We have no torrents for this movie now, please come back later"
 	errorText      = "An error occurred, please try again"
 	taskAddedText  = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
 	dlPrefix       = "/dl"
-	replyNoIMDbIDS = "We encountered an error while finding IMDB IDs for you: "
+	replyNoIMDbIDs = "We encountered an error while finding IMDb IDs for you: "
+	replyNoPubDate = "We could not find this magnet link, please check your input"
+	replyNoTask    = "We encountered an error while finding this magnet link"
 )
 
 func handleDownload(b *bot.Bot, m *bot.Message) {
@@ -31,13 +32,13 @@ func handleDownload(b *bot.Bot, m *bot.Message) {
 	// get `PubDate` from command, e.g. /dl1514983115
 	commands := strings.Split(m.Text, dlPrefix)
 	if len(commands) < 2 {
-		b.Send(m.Sender, noIMDbText)
+		b.Send(m.Sender, replyNoPubDate)
 		return
 	}
 	pubDate, err := strconv.Atoi(commands[1])
 	if err != nil {
 		log.Printf("error while parsing timestamp: %s", err)
-		b.Send(m.Sender, noIMDbText)
+		b.Send(m.Sender, replyNoPubDate)
 		return
 	}
 
@@ -46,7 +47,7 @@ func handleDownload(b *bot.Bot, m *bot.Message) {
 	task, err = task.getByPubDate()
 	if err != nil {
 		log.Printf("error while getting task: %s", err)
-		b.Send(m.Sender, noIMDbText)
+		b.Send(m.Sender, replyNoTask)
 		return
 	}
 	magnet := &task.Magnet
@@ -66,7 +67,7 @@ func handleDownload(b *bot.Bot, m *bot.Message) {
 func handleSearch(b *bot.Bot, m *bot.Message, api *rarbg.API) {
 	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
 	if err != nil {
-		b.Send(m.Sender, replyNoIMDbIDS+err.Error())
+		b.Send(m.Sender, replyNoIMDbIDs+err.Error())
 		return
 	}
 	if len(imdbIDs) == 0 {
@@ -92,7 +93,7 @@ func searchIMDbIDsFromMessage(text string) ([]string, error) {
 		}
 		imdbIDs = append(imdbIDs, movie.IMDbID())
 	}
-	// IMDB
+	// IMDb
 	imdbIDs = append(imdbIDs, findIMDbIDs(text)...)
 	return imdbIDs, nil
 }

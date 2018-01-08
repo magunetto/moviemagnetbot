@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"regexp"
 	"strconv"
@@ -20,8 +21,7 @@ const (
 	noIMDbText     = "No IMDb info found, please send correct IMDb links"
 	noTorrentsText = "We have no torrents for this movie now, please come back later"
 	errorText      = "An error occurred, please try again"
-	taskAddedText  = "You can use this magnet link as you want, but we also have a RSS feed for you: /feed"
-	feedText       = "Your RSS feed URL is " + host + "/tasks/%d.xml, you can subscribe it in your download tools"
+	taskAddedText  = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
 	dlPrefix       = "/dl"
 	replyNoIMDbIDS = "We encountered an error while finding IMDB IDs for you: "
 )
@@ -55,8 +55,12 @@ func handleDownload(b *bot.Bot, m *bot.Message) {
 	// save the task for user
 	user := &User{TelegramID: m.Sender.ID}
 	task.Created = time.Now()
-	user.appendTask(task)
-	b.Send(m.Sender, taskAddedText)
+	err = user.appendTask(task)
+	if err != nil {
+		log.Printf("error while adding task: %s", err)
+		return
+	}
+	b.Send(m.Sender, fmt.Sprintf(taskAddedText, user.FeedID))
 }
 
 func handleSearch(b *bot.Bot, m *bot.Message, api *rarbg.API) {

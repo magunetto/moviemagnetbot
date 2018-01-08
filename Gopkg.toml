@@ -20,7 +20,10 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
-
 [[constraint]]
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/speps/go-hashids"

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -43,9 +42,6 @@ func main() {
 	b.Handle("/help", func(m *bot.Message) {
 		b.Send(m.Sender, helpText)
 	})
-	b.Handle("/feed", func(m *bot.Message) {
-		b.Send(m.Sender, fmt.Sprintf(feedText, m.Sender.ID))
-	})
 	b.Handle(bot.OnText, func(m *bot.Message) {
 		log.Printf("@%s: %s", m.Sender.Username, m.Text)
 
@@ -64,7 +60,6 @@ func main() {
 	// http handlers
 	r := mux.NewRouter()
 	r.HandleFunc("/tasks/{user}.xml", feedHandler)
-
 	// http loop
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }

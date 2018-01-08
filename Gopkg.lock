@@ -56,6 +56,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/speps/go-hashids"
+  packages = ["."]
+  revision = "c6ced3330f133cec79e144fb11b2e4c5154059ae"
+
+[[projects]]
   name = "github.com/stretchr/testify"
   packages = ["assert"]
   revision = "b91bfb9ebec76498946beb6af7c0230c7cc7ba6c"
@@ -70,6 +76,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d5abcf439c6b0dc28394344983cdb44f703ceb60a341948002b23b52de20a46c"
+  inputs-digest = "ad31f29aa1b9bad04020e558424a137af9fcafd1e59b6e68d84f864a3bc91dba"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gorilla/feeds"
@@ -13,32 +12,20 @@ import (
 
 func feedHandler(w http.ResponseWriter, r *http.Request) {
 
-	// query user by telegram id
-	id, err := strconv.Atoi(mux.Vars(r)["user"])
-	if err != nil {
-		log.Printf("error while parsing telegram id: %s", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	user := &User{TelegramID: id}
-	user, err = user.getByTelegram()
-	if err != nil && user == nil {
-		// no user with this telegram id
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
+	// query user by feed id
+	user := &User{FeedID: mux.Vars(r)["user"]}
+	user, err := user.getByFeedID()
 	if err != nil {
 		log.Printf("error while getting user: %s", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	// generate feed for user
 	feed := &feeds.Feed{
-		Title:       fmt.Sprintf("Movie Magnet Bot Feed #%d", id),
-		Link:        &feeds.Link{Href: host + r.URL.String()},
-		Description: fmt.Sprintf("Download tasks for user #%d", id),
-		Created:     time.Now(),
+		Title:   fmt.Sprintf("Movie Magnet Bot feed"),
+		Link:    &feeds.Link{Href: host + r.URL.String()},
+		Created: time.Now(),
 	}
 	for _, t := range user.Tasks {
 		feed.Items = append(feed.Items, &feeds.Item{

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-pg/pg"
+	"github.com/speps/go-hashids"
 )
 
 // Task can be appended by User
@@ -21,8 +22,13 @@ type Task struct {
 type User struct {
 	ID         int
 	TelegramID int
+	FeedID     string
 	Tasks      []*Task
 }
+
+const (
+	hashAlphabet = "0123456789abcdef"
+)
 
 var db *pg.DB
 
@@ -56,47 +62,77 @@ func createSchema(db *pg.DB) error {
 	return nil
 }
 
-func (task *Task) create() {
-	_, err := db.Model(task).
+func (t *Task) create() (*Task, error) {
+	_, err := db.Model(t).
 		Where("pub_date= ?pub_date").
 		OnConflict("DO NOTHING").
 		SelectOrInsert()
 	if err != nil {
-		log.Printf("error while creating task: %s", err)
+		return nil, err
 	}
+	return t, nil
 }
 
-func (task *Task) getByPubDate() (*Task, error) {
-	err := db.Model(task).Where("pub_date = ?", task.PubDate).Select()
+func (t *Task) getByPubDate() (*Task, error) {
+	err := db.Model(t).Where("pub_date = ?", t.PubDate).Select()
 	if err != nil {
 		return nil, err
 	}
-	return task, nil
+	return t, nil
 }
 
-func (user *User) create() {
-	_, err := db.Model(user).
+func (u *User) create() (*User, error) {
+
+	// create user
+	_, err := db.Model(u).
 		Where("telegram_id= ?telegram_id").
 		OnConflict("DO NOTHING").
 		SelectOrInsert()
 	if err != nil {
-		log.Printf("error while creating user: %s", err)
+		return nil, err
 	}
-}
 
-func (user *User) appendTask(task *Task) {
-	user.create()
-	user.Tasks = append(user.Tasks, task)
-	err := db.Update(user)
-	if err != nil {
-		log.Printf("error while appending task: %s", err)
-	}
-}
-
-func (user *User) getByTelegram() (*User, error) {
-	err := db.Model(user).Where("telegram_id = ?", user.TelegramID).Select()
+	// generate a feed id for user
+	u, err = u.newFeedID()
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return u, nil
+}
+
+func (u *User) newFeedID() (*User, error) {
+	hd := hashids.NewData()
+	hd.Salt = os.Getenv("MOVIE_MAGNET_BOT_SALT")
+	hd.Alphabet = hashAlphabet
+	h, err := hashids.NewWithData(hd)
+	if err != nil {
+		return nil, err
+	}
+	feed, err := h.Encode([]int{u.TelegramID})
+	if err != nil {
+		return nil, err
+	}
+	u.FeedID = feed
+	return u, nil
+}
+
+func (u *User) appendTask(t *Task) error {
+	u, err := u.create()
+	if err != nil {
+		return err
+	}
+	u.Tasks = append(u.Tasks, t)
+	err = db.Update(u)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *User) getByFeedID() (*User, error) {
+	err := db.Model(u).Where("feed_id = ?", u.FeedID).Select()
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
 }

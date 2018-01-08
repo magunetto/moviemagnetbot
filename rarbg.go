@@ -50,7 +50,10 @@ func searchIMDb(w io.Writer, id string, api *rarbg.API) {
 			Magnet:  r.Download,
 			PubDate: t.Unix(),
 		}
-		task.create()
+		_, err = task.create()
+		if err != nil {
+			log.Printf("error while creating task: %s", err)
+		}
 	}
 }
 

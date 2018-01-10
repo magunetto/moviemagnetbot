@@ -16,21 +16,21 @@ import (
 )
 
 const (
-	host           = "https://moviemagnetbot.herokuapp.com"
-	helpText       = "What movies do you like? Send IMDb or Douban links to me"
-	noTorrentsText = "We have no torrents for this movie now, please come back later"
-	errorText      = "An error occurred, please try again"
-	taskAddedText  = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
-	dlPrefix       = "/dl"
-	replyNoIMDbIDs = "We encountered an error while finding IMDb IDs for you: "
-	replyNoPubDate = "We could not find this magnet link, please check your input"
-	replyNoTask    = "We encountered an error while finding this magnet link"
+	host            = "https://moviemagnetbot.herokuapp.com"
+	replyHelp       = "What movies do you like? Send IMDb or Douban links to me"
+	replyRarbgErr   = "We encountered an error while finding magnet links, please try again"
+	replyNoIMDbIDs  = "We encountered an error while finding IMDb IDs for you: "
+	replyNoTorrents = "We have no magnet links for this movie now, please come back later"
+	replyNoPubDate  = "We could not find this magnet link, please check your input"
+	replyNoTask     = "We encountered an error while finding this magnet link"
+	replyTaskAdded  = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
+	cmdPrefixDown   = "/dl"
 )
 
-func handleDownload(b *bot.Bot, m *bot.Message) {
+func downloadHandler(b *bot.Bot, m *bot.Message) {
 
 	// get `PubDate` from command, e.g. /dl1514983115
-	commands := strings.Split(m.Text, dlPrefix)
+	commands := strings.Split(m.Text, cmdPrefixDown)
 	if len(commands) < 2 {
 		b.Send(m.Sender, replyNoPubDate)
 		return
@@ -61,17 +61,17 @@ func handleDownload(b *bot.Bot, m *bot.Message) {
 		log.Printf("error while adding task: %s", err)
 		return
 	}
-	b.Send(m.Sender, fmt.Sprintf(taskAddedText, user.FeedID))
+	b.Send(m.Sender, fmt.Sprintf(replyTaskAdded, user.FeedID))
 }
 
-func handleSearch(b *bot.Bot, m *bot.Message, api *rarbg.API) {
+func searchHandler(b *bot.Bot, m *bot.Message, api *rarbg.API) {
 	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
 	if err != nil {
 		b.Send(m.Sender, replyNoIMDbIDs+err.Error())
 		return
 	}
 	if len(imdbIDs) == 0 {
-		b.Send(m.Sender, helpText)
+		b.Send(m.Sender, replyHelp)
 		return
 	}
 

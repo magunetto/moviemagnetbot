@@ -22,12 +22,12 @@ func searchIMDb(w io.Writer, id string, api *rarbg.API) {
 	results, err := search(api, "imdb", id)
 	if err != nil {
 		log.Printf("error while querying rarbg: %s", err)
-		fmt.Fprintln(w, errorText)
+		fmt.Fprintln(w, replyRarbgErr)
 		return
 	}
 	if len(results) == 0 {
 		log.Printf("no torrents found for this movie: %s", id)
-		fmt.Fprintln(w, noTorrentsText)
+		fmt.Fprintln(w, replyNoTorrents)
 		return
 	}
 	fmt.Fprintf(w, "§ `%s`\n", id)
@@ -40,7 +40,7 @@ func searchIMDb(w io.Writer, id string, api *rarbg.API) {
 		if err != nil {
 			log.Printf("error while parsing date: %s", err)
 		}
-		command := fmt.Sprintf("%s%d", dlPrefix, t.Unix())
+		command := fmt.Sprintf("%s%d", cmdPrefixDown, t.Unix())
 		fmt.Fprintf(w, "*%d*↑ *%d*↓ ∑`%s` %s\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command)
 		fmt.Fprintf(w, "%s\n", r.Title)
 

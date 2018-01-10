@@ -37,22 +37,22 @@ func main() {
 
 	// bot handlers
 	b.Handle("/start", func(m *bot.Message) {
-		b.Send(m.Sender, helpText)
+		b.Send(m.Sender, replyHelp)
 	})
 	b.Handle("/help", func(m *bot.Message) {
-		b.Send(m.Sender, helpText)
+		b.Send(m.Sender, replyHelp)
 	})
 	b.Handle(bot.OnText, func(m *bot.Message) {
 		log.Printf("@%s: %s", m.Sender.Username, m.Text)
 
 		// download requst
-		if strings.HasPrefix(m.Text, dlPrefix) {
-			handleDownload(b, m)
+		if strings.HasPrefix(m.Text, cmdPrefixDown) {
+			downloadHandler(b, m)
 			return
 		}
 
 		// search request
-		handleSearch(b, m, api)
+		searchHandler(b, m, api)
 	})
 	// bot loop
 	go b.Start()

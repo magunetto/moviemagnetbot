@@ -42,7 +42,7 @@ func searchIMDb(w io.Writer, id string, api *rarbg.API) {
 		}
 		command := fmt.Sprintf("%s%d", cmdPrefixDown, t.Unix())
 		fmt.Fprintf(w, "*%d*↑ *%d*↓ ∑`%s` %s\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command)
-		fmt.Fprintf(w, "%s\n", r.Title)
+		fmt.Fprintf(w, "[¶](%s) %s\n", r.InfoPage, r.Title)
 
 		// create task for torrent
 		task := &Task{

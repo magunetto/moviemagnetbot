@@ -20,10 +20,11 @@ type Task struct {
 
 // User (i.e. Downloader)
 type User struct {
-	ID         int
-	TelegramID int
-	FeedID     string
-	Tasks      []*Task
+	ID          int
+	TelegramID  int
+	FeedID      string
+	FeedChecked time.Time
+	Tasks       []*Task
 }
 
 const (
@@ -135,4 +136,8 @@ func (u *User) getByFeedID() (*User, error) {
 		return nil, err
 	}
 	return u, nil
+}
+
+func (u *User) update() error {
+	return db.Update(u)
 }

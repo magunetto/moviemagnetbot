@@ -44,4 +44,11 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 	// send the feed
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(rss))
+
+	// update feed checking time
+	user.FeedChecked = time.Now()
+	err = user.update()
+	if err != nil {
+		log.Printf("error while updating user: %s", err)
+	}
 }

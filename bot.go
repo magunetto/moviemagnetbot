@@ -22,8 +22,13 @@ const (
 	replyNoTorrents = "We have no magnet links for this movie now, please come back later"
 	replyNoPubDate  = "We could not find this magnet link, please check your input"
 	replyNoTask     = "We encountered an error while finding this magnet link"
-	replyTaskAdded  = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
+	replyFeedTips   = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
+	replyTaskAdded  = "Task added to your feed, it will start soon"
 	cmdPrefixDown   = "/dl"
+)
+
+const (
+	maxFeedCheckInterval = 24 * time.Hour
 )
 
 func downloadHandler(b *bot.Bot, m *bot.Message) {
@@ -60,7 +65,15 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 		log.Printf("error while adding task: %s", err)
 		return
 	}
-	b.Send(m.Sender, fmt.Sprintf(replyTaskAdded, user.FeedID))
+	if isUserFeedActive(user) {
+		b.Send(m.Sender, replyTaskAdded)
+		return
+	}
+	b.Send(m.Sender, fmt.Sprintf(replyFeedTips, user.FeedID))
+}
+
+func isUserFeedActive(user *User) bool {
+	return time.Now().Sub(user.FeedChecked) < time.Duration(maxFeedCheckInterval)
 }
 
 func searchHandler(b *bot.Bot, m *bot.Message) {

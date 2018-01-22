@@ -34,7 +34,7 @@ func searchIMDb(w io.Writer, id string) {
 		fmt.Fprintln(w, replyNoTorrents)
 		return
 	}
-	fmt.Fprintf(w, "§ `%s`\n", id)
+	fmt.Fprintf(w, "§ %s\n", id)
 
 	// output torrents
 	for _, r := range results {
@@ -45,8 +45,8 @@ func searchIMDb(w io.Writer, id string) {
 			log.Printf("error while parsing date: %s", err)
 		}
 		command := fmt.Sprintf("%s%d", cmdPrefixDown, t.Unix())
-		fmt.Fprintf(w, "*%d*↑ *%d*↓ ∑`%s` %s\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command)
-		fmt.Fprintf(w, "[¶](%s) %s\n", r.InfoPage, r.Title)
+		fmt.Fprintf(w, "*%d*↑ *%d*↓  `%s`  %s  [¶](%s)\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command, r.InfoPage)
+		fmt.Fprintf(w, "_%s_\n", r.Title)
 
 		// create task for torrent
 		task := &Task{

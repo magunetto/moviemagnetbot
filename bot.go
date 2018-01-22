@@ -11,7 +11,6 @@ import (
 
 	"github.com/idealhack/moviemagnetbot/douban"
 
-	rarbg "github.com/idealhack/go-torrentapi"
 	bot "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -64,7 +63,7 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 	b.Send(m.Sender, fmt.Sprintf(replyTaskAdded, user.FeedID))
 }
 
-func searchHandler(b *bot.Bot, m *bot.Message, api *rarbg.API) {
+func searchHandler(b *bot.Bot, m *bot.Message) {
 	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
 	if err != nil {
 		b.Send(m.Sender, replyNoIMDbIDs+err.Error())
@@ -77,7 +76,7 @@ func searchHandler(b *bot.Bot, m *bot.Message, api *rarbg.API) {
 
 	for _, id := range imdbIDs {
 		result := new(bytes.Buffer)
-		searchIMDb(result, id, api)
+		searchIMDb(result, id)
 		b.Send(m.Sender, result.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
 	}
 }

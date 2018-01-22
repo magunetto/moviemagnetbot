@@ -37,7 +37,7 @@ func main() {
 	log.Printf("telebot inited")
 
 	// init rarbg
-	api, err := rarbg.Init()
+	api, err = rarbg.Init()
 	if err != nil {
 		log.Fatalf("error while querying rarbg: %s", err)
 	}
@@ -60,7 +60,7 @@ func main() {
 		}
 
 		// search request
-		searchHandler(b, m, api)
+		searchHandler(b, m)
 	})
 	// bot loop
 	go b.Start()

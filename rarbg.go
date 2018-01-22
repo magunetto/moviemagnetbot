@@ -16,10 +16,14 @@ const (
 	limit  = 25              // Limit of results (25, 50, 100)
 )
 
-func searchIMDb(w io.Writer, id string, api *rarbg.API) {
+var (
+	api *rarbg.API
+)
+
+func searchIMDb(w io.Writer, id string) {
 
 	// search torrents by imdb id
-	results, err := search(api, "imdb", id)
+	results, err := search("imdb", id)
 	if err != nil {
 		log.Printf("error while querying rarbg: %s", err)
 		fmt.Fprintln(w, replyRarbgErr)
@@ -57,7 +61,7 @@ func searchIMDb(w io.Writer, id string, api *rarbg.API) {
 	}
 }
 
-func search(api *rarbg.API, clue string, keyword string) (results rarbg.TorrentResults, err error) {
+func search(clue string, keyword string) (results rarbg.TorrentResults, err error) {
 	switch clue {
 	case "tvdb":
 		api.SearchTVDB(keyword)

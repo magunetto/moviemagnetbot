@@ -13,8 +13,8 @@ import (
 func feedHandler(w http.ResponseWriter, r *http.Request) {
 
 	// query user by feed id
-	user := &User{FeedID: mux.Vars(r)["user"]}
-	user, err := user.getByFeedID()
+	u := &User{FeedID: mux.Vars(r)["user"]}
+	u, err := u.getByFeedID()
 	if err != nil {
 		log.Printf("error while getting user: %s", err)
 		w.WriteHeader(http.StatusNotFound)
@@ -27,11 +27,18 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 		Link:    &feeds.Link{Href: host + r.URL.String()},
 		Created: time.Now(),
 	}
-	for _, t := range user.Tasks {
+	torrents, err := u.getTorrents()
+	if err != nil {
+		log.Printf("error while getting torrents: %s", err)
+	}
+	for i, t := range torrents {
+		if i > itemsPerFeed {
+			break
+		}
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:   t.Title,
 			Link:    &feeds.Link{Href: t.Magnet},
-			Created: t.Created,
+			Created: t.Downloaded,
 		})
 	}
 	rss, err := feed.ToRss()
@@ -45,9 +52,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(rss))
 
-	// update feed checking time
-	user.FeedChecked = time.Now()
-	err = user.update()
+	err = u.renewFeedChecked()
 	if err != nil {
 		log.Printf("error while updating user: %s", err)
 	}

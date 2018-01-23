@@ -15,19 +15,20 @@ import (
 )
 
 const (
-	host            = "https://moviemagnetbot.herokuapp.com"
+	host = "https://moviemagnetbot.herokuapp.com"
+
 	replyHelp       = "What movies do you like? Send IMDb or Douban links to me"
 	replyRarbgErr   = "We encountered an error while finding magnet links, please try again"
 	replyNoIMDbIDs  = "We encountered an error while finding IMDb IDs for you: "
 	replyNoTorrents = "We have no magnet links for this movie now, please come back later"
 	replyNoPubDate  = "We could not find this magnet link, please check your input"
-	replyNoTask     = "We encountered an error while finding this magnet link"
+	replyNoTorrent  = "We encountered an error while finding this magnet link"
 	replyFeedTips   = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
 	replyTaskAdded  = "Task added to your feed, it will start soon"
-	cmdPrefixDown   = "/dl"
-)
 
-const (
+	cmdPrefixDown = "/dl"
+
+	itemsPerFeed       = 20
 	feedCheckThreshold = time.Duration(24 * time.Hour)
 )
 
@@ -46,34 +47,30 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 		return
 	}
 
-	// get task by `PubDate`
-	task := &Task{PubDate: int64(pubDate)}
-	task, err = task.getByPubDate()
+	// get torrent by `PubDate`
+	t := &Torrent{PubDate: int64(pubDate)}
+	t, err = t.getByPubDate()
 	if err != nil {
-		log.Printf("error while getting task: %s", err)
-		b.Send(m.Sender, replyNoTask)
+		log.Printf("error while getting torrent: %s", err)
+		b.Send(m.Sender, replyNoTorrent)
 		return
 	}
-	magnet := &task.Magnet
+	magnet := &t.Magnet
 	b.Send(m.Sender, "`"+*magnet+"`", &bot.SendOptions{ParseMode: bot.ModeMarkdown})
 
-	// save the task for user
-	user := &User{TelegramID: m.Sender.ID}
-	task.Created = time.Now()
-	err = user.appendTask(task)
+	// save the torrent for user
+	u := &User{TelegramID: m.Sender.ID}
+	err = u.appendTorrent(t)
 	if err != nil {
-		log.Printf("error while adding task: %s", err)
+		log.Printf("error while adding torrent for user: %s", err)
 		return
 	}
-	if isUserFeedActive(user) {
+
+	if u.isFeedActive() {
 		b.Send(m.Sender, replyTaskAdded)
 		return
 	}
-	b.Send(m.Sender, fmt.Sprintf(replyFeedTips, user.FeedID))
-}
-
-func isUserFeedActive(user *User) bool {
-	return time.Now().Sub(user.FeedChecked) < feedCheckThreshold
+	b.Send(m.Sender, fmt.Sprintf(replyFeedTips, u.FeedID))
 }
 
 func searchHandler(b *bot.Bot, m *bot.Message) {

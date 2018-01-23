@@ -48,15 +48,15 @@ func searchIMDb(w io.Writer, id string) {
 		fmt.Fprintf(w, "*%d*↑ *%d*↓  `%s`  %s  [¶](%s)\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command, r.InfoPage)
 		fmt.Fprintf(w, "_%s_\n", r.Title)
 
-		// create task for torrent
-		task := &Task{
+		// create torrent for torrent
+		torrent := &Torrent{
 			Title:   r.Title,
 			Magnet:  r.Download,
 			PubDate: t.Unix(),
 		}
-		_, err = task.create()
+		_, err = torrent.create()
 		if err != nil {
-			log.Printf("error while creating task: %s", err)
+			log.Printf("error while creating torrent: %s", err)
 		}
 	}
 }

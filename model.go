@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
 	"github.com/speps/go-hashids"
 )
 
@@ -21,11 +22,14 @@ type Torrent struct {
 
 // User (i.e. Downloader)
 type User struct {
-	ID          int
-	TelegramID  int
-	FeedID      string
-	FeedChecked time.Time
-	Torrents    []Torrent `pg:",many2many:user_torrents"`
+	ID           int
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	TelegramID   int
+	TelegramName string
+	FeedID       string
+	FeedChecked  time.Time
+	Torrents     []Torrent `pg:",many2many:user_torrents"`
 }
 
 // UserTorrent is about which user download what torrents
@@ -162,4 +166,20 @@ func (u *User) renewFeedChecked() error {
 
 func (u *User) isFeedActive() bool {
 	return time.Now().Sub(u.FeedChecked) < feedCheckThreshold
+}
+
+// BeforeInsert hook
+func (u *User) BeforeInsert(db orm.DB) error {
+	if u.CreatedAt.IsZero() {
+		u.CreatedAt = time.Now()
+	}
+	return nil
+}
+
+// BeforeUpdate hook
+func (u *User) BeforeUpdate(db orm.DB) error {
+	if u.UpdatedAt.IsZero() {
+		u.UpdatedAt = time.Now()
+	}
+	return nil
 }

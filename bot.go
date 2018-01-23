@@ -59,7 +59,10 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 	b.Send(m.Sender, "`"+*magnet+"`", &bot.SendOptions{ParseMode: bot.ModeMarkdown})
 
 	// save the torrent for user
-	u := &User{TelegramID: m.Sender.ID}
+	u := &User{
+		TelegramID:   m.Sender.ID,
+		TelegramName: m.Sender.Username,
+	}
 	err = u.appendTorrent(t)
 	if err != nil {
 		log.Printf("error while adding torrent for user: %s", err)

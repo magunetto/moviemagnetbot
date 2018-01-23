@@ -28,7 +28,7 @@ const (
 )
 
 const (
-	maxFeedCheckInterval = 24 * time.Hour
+	feedCheckThreshold = time.Duration(24 * time.Hour)
 )
 
 func downloadHandler(b *bot.Bot, m *bot.Message) {
@@ -73,7 +73,7 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 }
 
 func isUserFeedActive(user *User) bool {
-	return time.Now().Sub(user.FeedChecked) < time.Duration(maxFeedCheckInterval)
+	return time.Now().Sub(user.FeedChecked) < feedCheckThreshold
 }
 
 func searchHandler(b *bot.Bot, m *bot.Message) {

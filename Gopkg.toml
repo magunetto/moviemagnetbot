@@ -27,3 +27,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/speps/go-hashids"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/idealhack/tmdb"

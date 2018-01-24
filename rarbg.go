@@ -17,26 +17,23 @@ const (
 )
 
 var (
-	api *rarbg.API
+	rapi *rarbg.API
 )
 
-func searchIMDb(w io.Writer, id string) {
+func searchTorrents(w io.Writer, service string, id string) (isSingleResult bool) {
 
-	// search torrents by imdb id
-	results, err := search("imdb", id)
+	results, err := searchByServiceID(service, id)
 	if err != nil {
 		log.Printf("error while querying rarbg: %s", err)
 		fmt.Fprintln(w, replyRarbgErr)
-		return
+		return false
 	}
 	if len(results) == 0 {
 		log.Printf("no torrents found for this movie: %s", id)
 		fmt.Fprintln(w, replyNoTorrents)
-		return
+		return false
 	}
-	fmt.Fprintf(w, "§ %s\n", id)
 
-	// output torrents
 	for _, r := range results {
 
 		// use `PubDate` as an unique command for each torrent
@@ -45,10 +42,9 @@ func searchIMDb(w io.Writer, id string) {
 			log.Printf("error while parsing date: %s", err)
 		}
 		command := fmt.Sprintf("%s%d", cmdPrefixDown, t.Unix())
+		fmt.Fprintf(w, "%s\n", r.Title)
 		fmt.Fprintf(w, "*%d*↑ *%d*↓  `%s`  %s  [¶](%s)\n", r.Seeders, r.Leechers, humanizeSize(r.Size), command, r.InfoPage)
-		fmt.Fprintf(w, "_%s_\n", r.Title)
 
-		// create torrent for torrent
 		torrent := &Torrent{
 			Title:   r.Title,
 			Magnet:  r.Download,
@@ -59,20 +55,18 @@ func searchIMDb(w io.Writer, id string) {
 			log.Printf("error while creating torrent: %s", err)
 		}
 	}
+	return len(results) == 1
 }
 
-func search(clue string, keyword string) (rarbg.TorrentResults, error) {
-	switch clue {
-	case "tvdb":
-		api.SearchTVDB(keyword)
+func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) {
+	switch service {
 	case "imdb":
-		api.SearchIMDb(keyword)
-	case "search":
-		api.SearchString(keyword)
+		rapi.SearchIMDb(id)
+	case "tmdb":
+		rapi.SearchTheMovieDb(id)
 	}
-
-	api.Ranked(ranked).Sort(sort).Format(format).Limit(limit)
-	return api.Search()
+	rapi.Ranked(ranked).Sort(sort).Format(format).Limit(limit)
+	return rapi.Search()
 }
 
 func humanizeSize(s uint64) string {

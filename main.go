@@ -17,6 +17,7 @@ import (
 
 	"github.com/gorilla/mux"
 	rarbg "github.com/idealhack/go-torrentapi"
+	"github.com/idealhack/tmdb"
 	bot "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -36,8 +37,13 @@ func main() {
 	}
 	log.Printf("telebot inited")
 
+	// init tmdb
+	tapi = tmdb.New()
+	tapi.APIKey = os.Getenv("TMDB_API_TOKEN")
+	log.Printf("tmdb inited")
+
 	// init rarbg
-	api, err = rarbg.Init()
+	rapi, err = rarbg.Init()
 	if err != nil {
 		log.Fatalf("error while querying rarbg: %s", err)
 	}
@@ -56,6 +62,11 @@ func main() {
 		// download requst
 		if strings.HasPrefix(m.Text, cmdPrefixDown) {
 			downloadHandler(b, m)
+			return
+		}
+		// tmdb search
+		if strings.HasPrefix(m.Text, cmdPrefixTMDB) {
+			tmdbHandler(b, m)
 			return
 		}
 

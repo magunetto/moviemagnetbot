@@ -6,7 +6,6 @@ import (
 	"log"
 	"regexp"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/idealhack/moviemagnetbot/douban"
@@ -17,16 +16,19 @@ import (
 const (
 	host = "https://moviemagnetbot.herokuapp.com"
 
-	replyHelp       = "What movies do you like? Send IMDb or Douban links to me"
+	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
 	replyRarbgErr   = "We encountered an error while finding magnet links, please try again"
+	replyTMDbErr    = "We encountered an error while finding movies, please try again"
 	replyNoIMDbIDs  = "We encountered an error while finding IMDb IDs for you: "
 	replyNoTorrents = "We have no magnet links for this movie now, please come back later"
 	replyNoPubDate  = "We could not find this magnet link, please check your input"
+	replyNoTMDb     = "We could not find this movie on TMDb, please check your input"
 	replyNoTorrent  = "We encountered an error while finding this magnet link"
 	replyFeedTips   = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
 	replyTaskAdded  = "Task added to your feed, it will start soon"
 
 	cmdPrefixDown = "/dl"
+	cmdPrefixTMDB = "/tmdb"
 
 	itemsPerFeed       = 20
 	feedCheckThreshold = time.Duration(24 * time.Hour)
@@ -35,12 +37,8 @@ const (
 func downloadHandler(b *bot.Bot, m *bot.Message) {
 
 	// get `PubDate` from command, e.g. /dl1514983115
-	commands := strings.Split(m.Text, cmdPrefixDown)
-	if len(commands) < 2 {
-		b.Send(m.Sender, replyNoPubDate)
-		return
-	}
-	pubDate, err := strconv.Atoi(commands[1])
+	pubDateString := m.Text[len(cmdPrefixDown):len(m.Text)]
+	pubDate, err := strconv.Atoi(pubDateString)
 	if err != nil {
 		log.Printf("error while parsing timestamp: %s", err)
 		b.Send(m.Sender, replyNoPubDate)
@@ -76,21 +74,38 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 	b.Send(m.Sender, fmt.Sprintf(replyFeedTips, u.FeedID))
 }
 
+func tmdbHandler(b *bot.Bot, m *bot.Message) {
+	tmdbID := m.Text[len(cmdPrefixTMDB):len(m.Text)]
+	buffer := new(bytes.Buffer)
+	fmt.Fprintf(buffer, "§ %s\n", m.Text)
+	searchTorrents(buffer, "tmdb", tmdbID)
+	b.Send(m.Sender, buffer.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+}
+
 func searchHandler(b *bot.Bot, m *bot.Message) {
 	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
 	if err != nil {
 		b.Send(m.Sender, replyNoIMDbIDs+err.Error())
 		return
 	}
+
+	// Search movies or tvs
 	if len(imdbIDs) == 0 {
-		b.Send(m.Sender, replyHelp)
+		result := new(bytes.Buffer)
+		fmt.Fprintf(result, "§ %s\n", m.Text)
+		isSingleResult := searchMoviesAndTVs(result, m.Text)
+		b.Send(m.Sender, result.String(),
+			&bot.SendOptions{ParseMode: bot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
 		return
 	}
 
+	// Search torrents
 	for _, id := range imdbIDs {
 		result := new(bytes.Buffer)
-		searchIMDb(result, id)
-		b.Send(m.Sender, result.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+		fmt.Fprintf(result, "§ /%s\n", id)
+		isSingleResult := searchTorrents(result, "imdb", id)
+		b.Send(m.Sender, result.String(),
+			&bot.SendOptions{ParseMode: bot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
 	}
 }
 

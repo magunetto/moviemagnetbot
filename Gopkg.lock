@@ -10,8 +10,8 @@
 [[projects]]
   name = "github.com/go-pg/pg"
   packages = [".","internal","internal/parser","internal/pool","orm","types"]
-  revision = "fc91a7fbbb5dde827c24ef45b8705943a5c197b9"
-  version = "v6.6.23"
+  revision = "c2405ea05e2013fc1354cf8f61e94152b896ed91"
+  version = "v6.7.0"
 
 [[projects]]
   name = "github.com/gorilla/context"
@@ -28,14 +28,20 @@
 [[projects]]
   name = "github.com/gorilla/mux"
   packages = ["."]
-  revision = "7f08801859139f86dfafd1c296e2cba9a80d292e"
-  version = "v1.6.0"
+  revision = "53c1911da2b537f792e7cafcb446b05ffe33b996"
+  version = "v1.6.1"
 
 [[projects]]
   branch = "master"
   name = "github.com/idealhack/go-torrentapi"
   packages = ["."]
   revision = "c2588255ae07b3e511660c8291353ad5af7b3c09"
+
+[[projects]]
+  name = "github.com/idealhack/tmdb"
+  packages = ["."]
+  revision = "520335c8e8c22497e5d59c8830b393afcae415a2"
+  version = "0.3.9"
 
 [[projects]]
   branch = "master"
@@ -71,11 +77,11 @@
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
   packages = ["."]
-  revision = "fd49f3f2600037b57ee38200b479796e1c14c590"
+  revision = "2cebf54e145e9a5733e1220ddce94e338b4f90ef"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ad31f29aa1b9bad04020e558424a137af9fcafd1e59b6e68d84f864a3bc91dba"
+  inputs-digest = "3348f5389e33cb3cf01b285056ece650ca0bcae0d42d8b5f19bc323c005c5ac9"
   solver-name = "gps-cdcl"
   solver-version = 1

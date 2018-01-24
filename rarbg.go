@@ -61,7 +61,7 @@ func searchIMDb(w io.Writer, id string) {
 	}
 }
 
-func search(clue string, keyword string) (results rarbg.TorrentResults, err error) {
+func search(clue string, keyword string) (rarbg.TorrentResults, error) {
 	switch clue {
 	case "tvdb":
 		api.SearchTVDB(keyword)
@@ -72,8 +72,7 @@ func search(clue string, keyword string) (results rarbg.TorrentResults, err erro
 	}
 
 	api.Ranked(ranked).Sort(sort).Format(format).Limit(limit)
-	results, err = api.Search()
-	return
+	return api.Search()
 }
 
 func humanizeSize(s uint64) string {
@@ -82,7 +81,7 @@ func humanizeSize(s uint64) string {
 	case size < 1024:
 		return fmt.Sprintf("%d", uint64(size))
 	case size < 1024*1014:
-		return fmt.Sprintf("%.2fk", size/1024)
+		return fmt.Sprintf("%.2fK", size/1024)
 	case size < 1024*1024*1024:
 		return fmt.Sprintf("%.2fM", size/1024/1024)
 	default:

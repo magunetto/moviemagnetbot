@@ -33,21 +33,21 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/idealhack/go-torrentapi"
+  name = "github.com/jinzhu/inflection"
+  packages = ["."]
+  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/moviemagnet/go-torrentapi"
   packages = ["."]
   revision = "c2588255ae07b3e511660c8291353ad5af7b3c09"
 
 [[projects]]
   branch = "master"
-  name = "github.com/idealhack/tmdb"
+  name = "github.com/moviemagnet/tmdb"
   packages = ["."]
   revision = "0ced5b48a60b26c87abe6b5e1ba6ba0eab97fc38"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/jinzhu/inflection"
-  packages = ["."]
-  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -82,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "094d378d98cdb6f7503bbad8aeb125d5f19a854de3d75904004983f4cce7d182"
+  inputs-digest = "09409ef4ebaf97d5bb83169cbc5aed25457d412a3d4ae6b1e73476c2db7b20bc"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 
-	"github.com/idealhack/tmdb"
+	"github.com/moviemagnet/tmdb"
 )
 
 const (

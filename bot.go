@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/idealhack/moviemagnetbot/douban"
+	"github.com/moviemagnet/moviemagnetbot/douban"
 
 	bot "gopkg.in/tucnak/telebot.v2"
 )

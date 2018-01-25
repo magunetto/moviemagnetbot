@@ -47,7 +47,7 @@
   branch = "master"
   name = "github.com/moviemagnet/tmdb"
   packages = ["."]
-  revision = "0ced5b48a60b26c87abe6b5e1ba6ba0eab97fc38"
+  revision = "69528804f09ffe6244159f7fb9efa3a0fed3eb5d"
 
 [[projects]]
   name = "github.com/pkg/errors"

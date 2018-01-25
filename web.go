@@ -32,7 +32,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error while getting torrents: %s", err)
 	}
 	for i, t := range torrents {
-		if i > itemsPerFeed {
+		if i == itemsPerFeed {
 			break
 		}
 		feed.Items = append(feed.Items, &feeds.Item{

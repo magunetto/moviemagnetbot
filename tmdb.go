@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	tmdbURL = "https://www.themoviedb.org/%s/%d"
+	tmdbURL        = "https://www.themoviedb.org/%s/%d"
+	itemsPerResult = 5
 )
 
 var (
@@ -30,7 +31,10 @@ func searchMoviesAndTVs(w io.Writer, keyword string) (isSingleResult bool) {
 		return false
 	}
 
-	for _, r := range result.Results {
+	for i, r := range result.Results {
+		if i == itemsPerResult {
+			break
+		}
 		title := r.Title
 		date := r.ReleaseDate
 		if r.MediaType == "tv" {

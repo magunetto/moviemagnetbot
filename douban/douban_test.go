@@ -1,7 +1,10 @@
 package douban
 
-import "testing"
-import "github.com/stretchr/testify/assert"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 const (
 	movieHTMLPart = `
@@ -26,11 +29,14 @@ IMDb link in Comments: "http://www.imdb.com/title/tt2527337" target="_blank" rel
 <span class="pl">片长:</span> <span property="v:runtime" content="152">152分钟</span><br/>
 <span class="pl">又名:</span> 星球大战：最后绝地武士(港) / 星球大战8 / 星战8 / Star Wars: Episode VIII<br/>
 `
+
+	movieURL = "https://movie.douban.com/subject/1293181/"
 )
 
 func TestMovieParseHTMLOK(t *testing.T) {
 	m := NewMovie()
-	assert.NoError(t, m.ParseHTML([]byte(movieHTMLPart)))
+	err := m.ParseHTML([]byte(movieHTMLPart))
+	assert.NoError(t, err)
 	assert.Equal(t, "tt2527336", m.IMDbID())
 }
 
@@ -39,4 +45,11 @@ func TestMovieParseHTMLMissingIMDbURL(t *testing.T) {
 	err := m.ParseHTML([]byte(movieHTMLMissingIMDbURL))
 	assert.Equal(t, err, ErrIMDbURLMissing)
 	assert.Equal(t, "", m.IMDbID())
+}
+
+func TestMovieFetchFromURLOK(t *testing.T) {
+	m := NewMovie()
+	err := m.FetchFromURL(movieURL)
+	assert.NoError(t, err)
+	assert.Equal(t, "tt0054215", m.IMDbID())
 }

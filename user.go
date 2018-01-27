@@ -1,24 +1,16 @@
 package main
 
 import (
-	"log"
 	"os"
 	"time"
 
-	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
 	"github.com/speps/go-hashids"
 )
 
-// Torrent (magnet links)
-type Torrent struct {
-	ID          int
-	Title       string
-	Magnet      string
-	PubDate     int64
-	Downloaders []User    `pg:",many2many:user_torrents"`
-	Downloaded  time.Time `sql:"-"`
-}
+const (
+	hashAlphabet = "0123456789abcdef"
+)
 
 // User (i.e. Downloader)
 type User struct {
@@ -37,59 +29,6 @@ type UserTorrent struct {
 	UserID            int
 	TorrentID         int
 	TorrentDownloaded time.Time
-}
-
-const (
-	hashAlphabet = "0123456789abcdef"
-)
-
-var db *pg.DB
-
-func initModel() {
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		// localhost
-		db = pg.Connect(&pg.Options{User: "postgres"})
-	} else {
-		// heroku
-		opt, err := pg.ParseURL(dbURL)
-		if err != nil {
-			log.Fatalf("error while parsing url: %s", err)
-		}
-		db = pg.Connect(opt)
-	}
-
-	err := createSchema(db)
-	if err != nil {
-		log.Printf("error while creating schema: %s", err)
-	}
-}
-
-func createSchema(db *pg.DB) error {
-	for _, model := range []interface{}{
-		&User{},
-		&Torrent{},
-		&UserTorrent{},
-	} {
-		err := db.CreateTable(model, nil)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (t *Torrent) create() (*Torrent, error) {
-	_, err := db.Model(t).
-		Where("pub_date= ?pub_date").
-		OnConflict("DO NOTHING").
-		SelectOrInsert()
-	return t, err
-}
-
-func (t *Torrent) getByPubDate() (*Torrent, error) {
-	err := db.Model(t).Where("pub_date = ?", t.PubDate).Select()
-	return t, err
 }
 
 func (u *User) create() (*User, error) {

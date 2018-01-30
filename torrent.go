@@ -6,12 +6,12 @@ import (
 
 // Torrent (magnet links)
 type Torrent struct {
-	ID          int
-	Title       string
-	Magnet      string
-	PubDate     int64
-	Downloaders []User    `pg:",many2many:user_torrents"`
-	Downloaded  time.Time `sql:"-"`
+	ID           int
+	Title        string
+	Magnet       string
+	PubDate      int64
+	Downloaders  []User    `pg:",many2many:user_torrents"`
+	DownloadedAt time.Time `sql:"-"`
 }
 
 func (t *Torrent) create() (*Torrent, error) {

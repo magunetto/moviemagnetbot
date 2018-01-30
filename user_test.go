@@ -9,7 +9,7 @@ import (
 
 func TestUserFeedActive(t *testing.T) {
 	u := &User{
-		FeedChecked: time.Now().Add(-feedCheckThreshold + 1*time.Second),
+		FeedCheckedAt: time.Now().Add(-feedCheckThreshold + 1*time.Second),
 	}
 	isActive := u.isFeedActive()
 	assert.Equal(t, true, isActive)
@@ -17,9 +17,8 @@ func TestUserFeedActive(t *testing.T) {
 
 func TestUserFeedInactive(t *testing.T) {
 	u := &User{
-		FeedChecked: time.Now().Add(-feedCheckThreshold),
+		FeedCheckedAt: time.Now().Add(-feedCheckThreshold),
 	}
 	isActive := u.isFeedActive()
 	assert.Equal(t, false, isActive)
-
 }

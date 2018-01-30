@@ -14,21 +14,21 @@ const (
 
 // User (i.e. Downloader)
 type User struct {
-	ID           int
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	TelegramID   int
-	TelegramName string
-	FeedID       string
-	FeedChecked  time.Time
-	Torrents     []Torrent `pg:",many2many:user_torrents"`
+	ID            int
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	TelegramID    int
+	TelegramName  string
+	FeedID        string
+	FeedCheckedAt time.Time
+	Torrents      []Torrent `pg:",many2many:user_torrents"`
 }
 
 // UserTorrent is about which user download what torrents
 type UserTorrent struct {
-	UserID            int
-	TorrentID         int
-	TorrentDownloaded time.Time
+	UserID               int
+	TorrentID            int
+	Torrent_DownloadedAt time.Time
 }
 
 func (u *User) create() (*User, error) {
@@ -99,12 +99,12 @@ func (u *User) update() error {
 }
 
 func (u *User) renewFeedChecked() error {
-	u.FeedChecked = time.Now()
+	u.FeedCheckedAt = time.Now()
 	return u.update()
 }
 
 func (u *User) isFeedActive() bool {
-	return time.Now().Sub(u.FeedChecked) < feedCheckThreshold
+	return time.Now().Sub(u.FeedCheckedAt) < feedCheckThreshold
 }
 
 // BeforeInsert hook

@@ -35,7 +35,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:   t.Title,
 			Link:    &feeds.Link{Href: t.Magnet},
-			Created: t.Downloaded,
+			Created: t.DownloadedAt,
 		})
 	}
 	rss, err := feed.ToRss()

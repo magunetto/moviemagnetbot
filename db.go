@@ -9,7 +9,10 @@ import (
 
 var db *pg.DB
 
-func initModel() {
+// InitModel init model and create schemas
+func InitModel() {
+
+	// init model
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		// localhost
@@ -23,6 +26,7 @@ func initModel() {
 		db = pg.Connect(opt)
 	}
 
+	// create schemas
 	err := createSchema(db)
 	if err != nil {
 		log.Printf("error while creating schema: %s", err)

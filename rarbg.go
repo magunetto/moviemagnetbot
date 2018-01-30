@@ -20,6 +20,15 @@ var (
 	rapi *rarbg.API
 )
 
+// InitRARBG init RARBG API
+func InitRARBG() {
+	api, err := rarbg.Init()
+	if err != nil {
+		log.Fatalf("error while querying rarbg: %s", err)
+	}
+	rapi = api
+}
+
 func searchTorrents(w io.Writer, service string, id string) (isSingleResult bool) {
 
 	results, err := searchByServiceID(service, id)

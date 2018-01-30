@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 
 	"github.com/moviemagnet/tmdb"
 )
@@ -16,6 +17,12 @@ const (
 var (
 	tapi *tmdb.TMDB
 )
+
+// InitTMDb init TMDb API
+func InitTMDb() {
+	tapi = tmdb.New()
+	tapi.APIKey = os.Getenv("TMDB_API_TOKEN")
+}
 
 func searchMoviesAndTVs(w io.Writer, keyword string) (isSingleResult bool) {
 

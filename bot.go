@@ -4,13 +4,15 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/moviemagnet/moviemagnetbot/douban"
 
-	bot "gopkg.in/tucnak/telebot.v2"
+	"gopkg.in/tucnak/telebot.v2"
 )
 
 const (
@@ -34,7 +36,48 @@ const (
 	feedCheckThreshold = time.Duration(24 * time.Hour)
 )
 
-func downloadHandler(b *bot.Bot, m *bot.Message) {
+// RunBot init bot, register handlers, and start the bot
+func RunBot() {
+
+	// init bot
+	b, err := telebot.NewBot(telebot.Settings{
+		Token:  os.Getenv("MOVIE_MAGNET_BOT_TOKEN"),
+		Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
+	})
+	if err != nil {
+		log.Fatalf("error while creating telebot: %s", err)
+	}
+
+	// bot handlers
+	b.Handle("/start", func(m *telebot.Message) {
+		b.Send(m.Sender, replyHelp)
+	})
+	b.Handle("/help", func(m *telebot.Message) {
+		b.Send(m.Sender, replyHelp)
+	})
+	b.Handle(telebot.OnText, func(m *telebot.Message) {
+		log.Printf("@%s: %s", m.Sender.Username, m.Text)
+
+		// download requst
+		if strings.HasPrefix(m.Text, cmdPrefixDown) {
+			downloadHandler(b, m)
+			return
+		}
+		// tmdb search
+		if strings.HasPrefix(m.Text, cmdPrefixTMDB) {
+			tmdbHandler(b, m)
+			return
+		}
+
+		// search request
+		searchHandler(b, m)
+	})
+
+	// bot loop
+	b.Start()
+}
+
+func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 
 	// get `PubDate` from command, e.g. /dl1514983115
 	pubDateString := m.Text[len(cmdPrefixDown):len(m.Text)]
@@ -54,7 +97,7 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 		return
 	}
 	magnet := &t.Magnet
-	b.Send(m.Sender, "`"+*magnet+"`", &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+	b.Send(m.Sender, "`"+*magnet+"`", &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
 
 	// save the torrent for user
 	u := &User{
@@ -74,15 +117,15 @@ func downloadHandler(b *bot.Bot, m *bot.Message) {
 	b.Send(m.Sender, fmt.Sprintf(replyFeedTips, u.FeedID))
 }
 
-func tmdbHandler(b *bot.Bot, m *bot.Message) {
+func tmdbHandler(b *telebot.Bot, m *telebot.Message) {
 	tmdbID := m.Text[len(cmdPrefixTMDB):len(m.Text)]
 	buffer := new(bytes.Buffer)
 	fmt.Fprintf(buffer, "§ %s\n", m.Text)
 	searchTorrents(buffer, "tmdb", tmdbID)
-	b.Send(m.Sender, buffer.String(), &bot.SendOptions{ParseMode: bot.ModeMarkdown})
+	b.Send(m.Sender, buffer.String(), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
 }
 
-func searchHandler(b *bot.Bot, m *bot.Message) {
+func searchHandler(b *telebot.Bot, m *telebot.Message) {
 	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
 	if err != nil {
 		b.Send(m.Sender, replyNoIMDbIDs+err.Error())
@@ -95,7 +138,7 @@ func searchHandler(b *bot.Bot, m *bot.Message) {
 		fmt.Fprintf(result, "§ %s\n", m.Text)
 		isSingleResult := searchMoviesAndTVs(result, m.Text)
 		b.Send(m.Sender, result.String(),
-			&bot.SendOptions{ParseMode: bot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+			&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
 		return
 	}
 
@@ -105,7 +148,7 @@ func searchHandler(b *bot.Bot, m *bot.Message) {
 		fmt.Fprintf(result, "§ /%s\n", id)
 		isSingleResult := searchTorrents(result, "imdb", id)
 		b.Send(m.Sender, result.String(),
-			&bot.SendOptions{ParseMode: bot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+			&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
 	}
 }
 

@@ -4,11 +4,23 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 )
+
+// RunHTTPServer register handlers and start HTTP server
+func RunHTTPServer() {
+
+	// http handlers
+	r := mux.NewRouter()
+	r.HandleFunc("/tasks/{user}.xml", feedHandler)
+
+	// http loop
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
+}
 
 func feedHandler(w http.ResponseWriter, r *http.Request) {
 

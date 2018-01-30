@@ -31,10 +31,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("error while getting torrents: %s", err)
 	}
-	for i, t := range torrents {
-		if i == itemsPerFeed {
-			break
-		}
+	for _, t := range torrents {
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:   t.Title,
 			Link:    &feeds.Link{Href: t.Magnet},

@@ -89,8 +89,12 @@ func (u *User) appendTorrent(t *Torrent) error {
 	return db.Insert(&UserTorrent{u.ID, t.ID, time.Now()})
 }
 
-func (u *User) getTorrents() ([]Torrent, error) {
-	err := db.Model(u).Column("user.*", "Torrents").Where("id = ?", u.ID).Select()
+func (u *User) getTorrents(limit int) ([]Torrent, error) {
+	err := db.Model(u).Column("user.*", "Torrents").
+		Relation("Torrents", func(q *orm.Query) (*orm.Query, error) {
+			return q.Order("torrent__downloaded_at DESC").Limit(limit), nil
+		}).
+		Where("id = ?", u.ID).Select()
 	return u.Torrents, err
 }
 

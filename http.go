@@ -27,7 +27,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 		Link:    &feeds.Link{Href: host + r.URL.String()},
 		Created: time.Now(),
 	}
-	torrents, err := u.getTorrents()
+	torrents, err := u.getTorrents(itemsPerFeed)
 	if err != nil {
 		log.Printf("error while getting torrents: %s", err)
 	}

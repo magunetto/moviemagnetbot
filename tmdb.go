@@ -53,7 +53,7 @@ func searchMoviesAndTVs(w io.Writer, keyword string) (isSingleResult bool) {
 		command := fmt.Sprintf("%s%d", cmdPrefixTMDB, r.ID)
 		url := fmt.Sprintf(tmdbURL, r.MediaType, r.ID)
 		fmt.Fprintf(w, "%s (%s)\n", title, date[0:4])
-		fmt.Fprintf(w, "~ %s [¶](%s)\n", command, url)
+		fmt.Fprintf(w, "▸ %s [¶](%s)\n", command, url)
 	}
 	return len(result.Results) == 1
 }

@@ -52,7 +52,7 @@ func searchTorrents(w io.Writer, service string, id string) (isSingleResult bool
 		}
 		command := fmt.Sprintf("%s%d", cmdPrefixDown, t.Unix())
 		fmt.Fprintf(w, "%s\n", r.Title)
-		fmt.Fprintf(w, "~ *%d*↑ *%d*↓ `%s` %s [¶](%s)\n",
+		fmt.Fprintf(w, "▸ *%d*↑ *%d*↓ `%s` %s [¶](%s)\n",
 			r.Seeders, r.Leechers, humanizeSize(r.Size), command, r.InfoPage)
 
 		torrent := &Torrent{

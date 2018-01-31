@@ -45,6 +45,10 @@ func searchTorrents(w io.Writer, service string, id string) (isSingleResult bool
 
 	for _, r := range results {
 
+		if r.Title == "" {
+			continue
+		}
+
 		// use `PubDate` as an unique command for each torrent
 		t, err := time.Parse("2006-01-02 15:04:05 +0000", r.PubDate)
 		if err != nil {

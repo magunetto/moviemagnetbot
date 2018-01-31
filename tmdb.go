@@ -21,7 +21,9 @@ var (
 // InitTMDb init TMDb API
 func InitTMDb() {
 	tapi = tmdb.New()
-	tapi.APIKey = os.Getenv("TMDB_API_TOKEN")
+	if os.Getenv("TMDB_API_TOKEN") != "" {
+		tapi.APIKey = os.Getenv("TMDB_API_TOKEN")
+	}
 }
 
 func searchMoviesAndTVs(w io.Writer, keyword string) (isSingleResult bool) {

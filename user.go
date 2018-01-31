@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"time"
 
 	"github.com/go-pg/pg/orm"
+	"github.com/gorilla/feeds"
 	"github.com/speps/go-hashids"
 )
 
@@ -100,6 +102,30 @@ func (u *User) getTorrents(limit int) ([]Torrent, error) {
 
 func (u *User) update() error {
 	return db.Update(u)
+}
+
+func (u *User) generateFeed() (string, error) {
+	feed := &feeds.Feed{
+		Title:   userFeedTitle,
+		Link:    &feeds.Link{Href: fmt.Sprintf(userFeedURL, u.FeedID)},
+		Created: time.Now(),
+	}
+	torrents, err := u.getTorrents(itemsPerFeed)
+	if err != nil {
+		return "", err
+	}
+	for _, t := range torrents {
+		feed.Items = append(feed.Items, &feeds.Item{
+			Title:   t.Title,
+			Link:    &feeds.Link{Href: t.Magnet},
+			Created: t.DownloadedAt,
+		})
+	}
+	rss, err := feed.ToRss()
+	if err != nil {
+		return "", err
+	}
+	return rss, nil
 }
 
 func (u *User) renewFeedChecked() error {

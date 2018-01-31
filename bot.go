@@ -16,7 +16,8 @@ import (
 )
 
 const (
-	host = "https://moviemagnetbot.herokuapp.com"
+	userFeedTitle = "Movie Magnet Bot feed"
+	userFeedURL   = "https://moviemagnetbot.herokuapp.com/tasks/%s.xml"
 
 	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
 	replyRarbgErr   = "We encountered an error while finding magnet links, please try again"
@@ -26,7 +27,7 @@ const (
 	replyNoPubStamp = "We could not find this magnet link, please check your input"
 	replyNoTMDb     = "We could not find this movie on TMDb, please check your input"
 	replyNoTorrent  = "We encountered an error while finding this magnet link"
-	replyFeedTips   = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
+	replyFeedTips   = "Auto-download every link you requested by subscribing " + userFeedURL
 	replyTaskAdded  = "Task added to your feed, it will start soon"
 
 	cmdPrefixDown = "/dl"

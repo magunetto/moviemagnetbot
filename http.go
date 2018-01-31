@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"time"
 
-	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 )
 
@@ -33,24 +30,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// generate feed for user
-	feed := &feeds.Feed{
-		Title:   fmt.Sprintf("Movie Magnet Bot feed"),
-		Link:    &feeds.Link{Href: host + r.URL.String()},
-		Created: time.Now(),
-	}
-	torrents, err := u.getTorrents(itemsPerFeed)
-	if err != nil {
-		log.Printf("error while getting torrents: %s", err)
-	}
-	for _, t := range torrents {
-		feed.Items = append(feed.Items, &feeds.Item{
-			Title:   t.Title,
-			Link:    &feeds.Link{Href: t.Magnet},
-			Created: t.DownloadedAt,
-		})
-	}
-	rss, err := feed.ToRss()
+	rss, err := u.generateFeed()
 	if err != nil {
 		log.Printf("error while generating feed: %s", err)
 		w.WriteHeader(http.StatusInternalServerError)

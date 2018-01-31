@@ -23,7 +23,7 @@ const (
 	replyTMDbErr    = "We encountered an error while finding movies, please try again"
 	replyNoIMDbIDs  = "We encountered an error while finding IMDb IDs for you: "
 	replyNoTorrents = "We have no magnet links for this movie now, please come back later"
-	replyNoPubDate  = "We could not find this magnet link, please check your input"
+	replyNoPubStamp = "We could not find this magnet link, please check your input"
 	replyNoTMDb     = "We could not find this movie on TMDb, please check your input"
 	replyNoTorrent  = "We encountered an error while finding this magnet link"
 	replyFeedTips   = "Auto-download every link you requested by subscribing " + host + "/tasks/%s.xml"
@@ -79,18 +79,18 @@ func RunBot() {
 
 func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 
-	// get `PubDate` from command, e.g. /dl1514983115
-	pubDateString := m.Text[len(cmdPrefixDown):len(m.Text)]
-	pubDate, err := strconv.Atoi(pubDateString)
+	// get `PubStamp` from command, e.g. /dl1514983115
+	pubStampString := m.Text[len(cmdPrefixDown):len(m.Text)]
+	pubStamp, err := strconv.Atoi(pubStampString)
 	if err != nil {
 		log.Printf("error while parsing timestamp: %s", err)
-		b.Send(m.Sender, replyNoPubDate)
+		b.Send(m.Sender, replyNoPubStamp)
 		return
 	}
 
-	// get torrent by `PubDate`
-	t := &Torrent{PubDate: int64(pubDate)}
-	t, err = t.getByPubDate()
+	// get torrent by `PubStamp`
+	t := &Torrent{PubStamp: int64(pubStamp)}
+	t, err = t.getByPubStamp()
 	if err != nil {
 		log.Printf("error while getting torrent: %s", err)
 		b.Send(m.Sender, replyNoTorrent)

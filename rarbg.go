@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -31,45 +32,22 @@ func InitRARBG() {
 
 func searchTorrents(w io.Writer, service string, id string) (isSingleResult bool) {
 
-	results, err := searchByServiceID(service, id)
+	torrentResults, err := searchByServiceID(service, id)
 	if err != nil {
 		log.Printf("error while querying rarbg: %s", err)
 		fmt.Fprintln(w, replyRarbgErr)
 		return false
 	}
-	if len(results) == 0 {
+
+	if len(torrentResults) == 0 {
 		log.Printf("no torrents found for this movie: %s", id)
 		fmt.Fprintln(w, replyNoTorrents)
 		return false
 	}
 
-	for _, r := range results {
+	renderTorrents(w, torrentResults)
 
-		if r.Title == "" {
-			continue
-		}
-
-		// use `PubDate` as an unique command for each torrent
-		t, err := time.Parse("2006-01-02 15:04:05 +0000", r.PubDate)
-		if err != nil {
-			log.Printf("error while parsing date: %s", err)
-		}
-		command := fmt.Sprintf("%s%d", cmdPrefixDown, t.Unix())
-		fmt.Fprintf(w, "%s\n", r.Title)
-		fmt.Fprintf(w, "▸ *%d*↑ *%d*↓ `%s` %s [¶](%s)\n",
-			r.Seeders, r.Leechers, humanizeSize(r.Size), command, r.InfoPage)
-
-		torrent := &Torrent{
-			Title:   r.Title,
-			Magnet:  r.Download,
-			PubDate: t.Unix(),
-		}
-		_, err = torrent.create()
-		if err != nil {
-			log.Printf("error while creating torrent: %s", err)
-		}
-	}
-	return len(results) == 1
+	return len(torrentResults) == 1
 }
 
 func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) {
@@ -83,16 +61,33 @@ func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) 
 	return rapi.Search()
 }
 
-func humanizeSize(s uint64) string {
-	size := float64(s)
-	switch {
-	case size < 1024:
-		return fmt.Sprintf("%d", uint64(size))
-	case size < 1024*1014:
-		return fmt.Sprintf("%.2fK", size/1024)
-	case size < 1024*1024*1024:
-		return fmt.Sprintf("%.2fM", size/1024/1024)
-	default:
-		return fmt.Sprintf("%.2fG", size/1024/1024/1024)
+func renderTorrents(w io.Writer, trs []rarbg.TorrentResult) {
+
+	for _, tr := range trs {
+		t, err := saveTorrent(tr)
+		if err != nil {
+			log.Printf("error while saving torrent: %s", err)
+			continue
+		}
+		t.renderTorrent(w)
 	}
+}
+
+func saveTorrent(tr rarbg.TorrentResult) (*Torrent, error) {
+
+	t := &Torrent{TorrentResult: tr}
+	if tr.Title == "" {
+		return t, errors.New("Torrent title should not be empty")
+	}
+
+	// use `PubDate` as an unique command for each torrent
+	pubDate, err := time.Parse("2006-01-02 15:04:05 +0000", t.PubDate)
+	if err != nil {
+		return t, err
+	}
+	t.Title = tr.Title
+	t.Magnet = tr.Download
+	t.PubStamp = pubDate.Unix()
+
+	return t.create()
 }

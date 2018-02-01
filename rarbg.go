@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	rarbg "github.com/moviemagnet/go-torrentapi"
+	rarbg "github.com/magunetto/go-torrentapi"
 )
 
 const (

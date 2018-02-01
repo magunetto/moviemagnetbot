@@ -5,7 +5,7 @@ import (
 	"io"
 	"time"
 
-	rarbg "github.com/moviemagnet/go-torrentapi"
+	rarbg "github.com/magunetto/go-torrentapi"
 )
 
 // Torrent (magnet links)

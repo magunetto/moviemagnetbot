@@ -10,8 +10,8 @@
 [[projects]]
   name = "github.com/go-pg/pg"
   packages = [".","internal","internal/parser","internal/pool","orm","types"]
-  revision = "c2405ea05e2013fc1354cf8f61e94152b896ed91"
-  version = "v6.7.0"
+  revision = "e41e92dcded03a07b880815ec5892907883c036b"
+  version = "v6.7.1"
 
 [[projects]]
   name = "github.com/gorilla/context"
@@ -39,13 +39,13 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/moviemagnet/go-torrentapi"
+  name = "github.com/magunetto/go-torrentapi"
   packages = ["."]
-  revision = "c2588255ae07b3e511660c8291353ad5af7b3c09"
+  revision = "e889fd3f2262dba045600df88bc86f56393a7a4b"
 
 [[projects]]
   branch = "master"
-  name = "github.com/moviemagnet/tmdb"
+  name = "github.com/magunetto/tmdb"
   packages = ["."]
   revision = "69528804f09ffe6244159f7fb9efa3a0fed3eb5d"
 
@@ -70,8 +70,8 @@
 [[projects]]
   name = "github.com/stretchr/testify"
   packages = ["assert"]
-  revision = "b91bfb9ebec76498946beb6af7c0230c7cc7ba6c"
-  version = "v1.2.0"
+  revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
+  version = "v1.2.1"
 
 [[projects]]
   branch = "v2"
@@ -82,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "09409ef4ebaf97d5bb83169cbc5aed25457d412a3d4ae6b1e73476c2db7b20bc"
+  inputs-digest = "fbce9c685b2170d25aa15ae878d34744610efd35a1b4e020b654269a0cc91e81"
   solver-name = "gps-cdcl"
   solver-version = 1

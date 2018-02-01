@@ -2,16 +2,16 @@
 
 🤖 A telegram bot for movies
 
-[![Build Status](https://travis-ci.org/moviemagnet/moviemagnetbot.svg)](https://travis-ci.org/moviemagnet/moviemagnetbot)
-[![Coverage Status](https://coveralls.io/repos/github/moviemagnet/moviemagnetbot/badge.svg?branch=master)](https://coveralls.io/github/moviemagnet/moviemagnetbot?branch=master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/moviemagnet/moviemagnetbot)](https://goreportcard.com/report/github.com/moviemagnet/moviemagnetbot)
+[![Build Status](https://travis-ci.org/magunetto/moviemagnetbot.svg)](https://travis-ci.org/magunetto/moviemagnetbot)
+[![Coverage Status](https://coveralls.io/repos/github/magunetto/moviemagnetbot/badge.svg?branch=master)](https://coveralls.io/github/magunetto/moviemagnetbot?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/magunetto/moviemagnetbot)](https://goreportcard.com/report/github.com/magunetto/moviemagnetbot)
 
 ## Features
 
 - Search movies and TVs by names or IMDb / Douban links
 - Download them automatically by one click
 
-*[More to come](https://github.com/moviemagnet/moviemagnetbot/wiki/Roadmap)*
+*[More to come](https://github.com/magunetto/moviemagnetbot/wiki/Roadmap)*
 
 ## Usage
 

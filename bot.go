@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/moviemagnet/moviemagnetbot/douban"
+	"github.com/magunetto/moviemagnetbot/douban"
 
 	"gopkg.in/tucnak/telebot.v2"
 )

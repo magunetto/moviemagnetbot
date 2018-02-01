@@ -30,4 +30,4 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/moviemagnet/tmdb"
+  name = "github.com/magunetto/tmdb"

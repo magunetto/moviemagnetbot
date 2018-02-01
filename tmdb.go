@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/moviemagnet/tmdb"
+	"github.com/magunetto/tmdb"
 )
 
 const (

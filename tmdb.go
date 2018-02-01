@@ -40,10 +40,18 @@ func searchMoviesAndTVs(w io.Writer, keyword string) (isSingleResult bool) {
 		return false
 	}
 
+	renderTMDbResult(w, result)
+
+	return len(result.Results) == 1
+}
+
+func renderTMDbResult(w io.Writer, result tmdb.SearchMultiResult) {
+
 	for i, r := range result.Results {
 		if i == itemsPerResult {
 			break
 		}
+
 		title := r.Title
 		date := r.ReleaseDate
 		if r.MediaType == "tv" {
@@ -55,5 +63,4 @@ func searchMoviesAndTVs(w io.Writer, keyword string) (isSingleResult bool) {
 		fmt.Fprintf(w, "%s (%s)\n", title, date[0:4])
 		fmt.Fprintf(w, "▸ %s [¶](%s)\n", command, url)
 	}
-	return len(result.Results) == 1
 }

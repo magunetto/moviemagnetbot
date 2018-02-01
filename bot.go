@@ -133,24 +133,32 @@ func searchHandler(b *telebot.Bot, m *telebot.Message) {
 		return
 	}
 
-	// Search movies or tvs
+	// No IMDb found in message, take it as keyword to search movies or TVs
 	if len(imdbIDs) == 0 {
-		result := new(bytes.Buffer)
-		fmt.Fprintf(result, "§ %s\n", m.Text)
-		isSingleResult := searchMoviesAndTVs(result, m.Text)
-		b.Send(m.Sender, result.String(),
-			&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+		movieSearchHandler(b, m)
 		return
 	}
 
-	// Search torrents
+	// Found IMDbs, search torrents for each of them
 	for _, id := range imdbIDs {
-		result := new(bytes.Buffer)
-		fmt.Fprintf(result, "§ /%s\n", id)
-		isSingleResult := searchTorrents(result, "imdb", id)
-		b.Send(m.Sender, result.String(),
-			&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+		torrentSearchHandler(b, m, id)
 	}
+}
+
+func movieSearchHandler(b *telebot.Bot, m *telebot.Message) {
+	result := new(bytes.Buffer)
+	fmt.Fprintf(result, "§ %s\n", m.Text)
+	isSingleResult := searchMoviesAndTVs(result, m.Text)
+	b.Send(m.Sender, result.String(),
+		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+}
+
+func torrentSearchHandler(b *telebot.Bot, m *telebot.Message, id string) {
+	result := new(bytes.Buffer)
+	fmt.Fprintf(result, "§ /%s\n", id)
+	isSingleResult := searchTorrents(result, "imdb", id)
+	b.Send(m.Sender, result.String(),
+		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
 }
 
 func searchIMDbIDsFromMessage(text string) ([]string, error) {

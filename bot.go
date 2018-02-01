@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/magunetto/moviemagnetbot/douban"
+	"github.com/magunetto/moviemagnetbot/movie"
 
 	"gopkg.in/tucnak/telebot.v2"
 )
@@ -166,7 +166,7 @@ func searchIMDbIDsFromMessage(text string) ([]string, error) {
 	// Douban
 	movieLinks := findDoubanMovieURLs(text)
 	for _, url := range movieLinks {
-		movie := douban.NewMovie()
+		movie := movie.New()
 		if err := movie.FetchFromURL(url); err != nil {
 			return nil, err
 		}

@@ -1,4 +1,4 @@
-package douban
+package movie
 
 import (
 	"testing"
@@ -33,23 +33,23 @@ IMDb link in Comments: "http://www.imdb.com/title/tt2527337" target="_blank" rel
 	movieURL = "https://movie.douban.com/subject/1293181/"
 )
 
+func TestMovieFetchFromURLOK(t *testing.T) {
+	m := New()
+	err := m.FetchFromURL(movieURL)
+	assert.NoError(t, err)
+	assert.Equal(t, "tt0054215", m.IMDbID())
+}
+
 func TestMovieParseHTMLOK(t *testing.T) {
-	m := NewMovie()
-	err := m.ParseHTML([]byte(movieHTMLPart))
+	m := New()
+	err := m.parseHTML([]byte(movieHTMLPart))
 	assert.NoError(t, err)
 	assert.Equal(t, "tt2527336", m.IMDbID())
 }
 
 func TestMovieParseHTMLMissingIMDbURL(t *testing.T) {
-	m := NewMovie()
-	err := m.ParseHTML([]byte(movieHTMLMissingIMDbURL))
+	m := New()
+	err := m.parseHTML([]byte(movieHTMLMissingIMDbURL))
 	assert.Equal(t, err, ErrIMDbURLMissing)
 	assert.Equal(t, "", m.IMDbID())
-}
-
-func TestMovieFetchFromURLOK(t *testing.T) {
-	m := NewMovie()
-	err := m.FetchFromURL(movieURL)
-	assert.NoError(t, err)
-	assert.Equal(t, "tt0054215", m.IMDbID())
 }

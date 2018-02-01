@@ -1,4 +1,4 @@
-package douban
+package movie
 
 import (
 	"errors"
@@ -11,17 +11,7 @@ import (
 // ErrIMDbURLMissing is error of can not find IMDb URL
 var ErrIMDbURLMissing = errors.New("Can not find IMDb links on the page")
 
-// Movie object
-type Movie struct {
-	imdbID string
-}
-
-// NewMovie returns a new Movie
-func NewMovie() Movie {
-	return Movie{}
-}
-
-// FetchFromURL fetches HTML from a URL
+// FetchFromURL fetches movie IMDb from a URL
 func (m *Movie) FetchFromURL(url string) error {
 	res, err := http.Get(url)
 	if err != nil {
@@ -32,22 +22,17 @@ func (m *Movie) FetchFromURL(url string) error {
 	if err != nil {
 		return err
 	}
-	return m.ParseHTML(pageHTML)
+	return m.parseHTML(pageHTML)
 }
 
 var reIMDbURL = regexp.MustCompile(`http(s)?:\/\/www\.imdb\.com\/title\/tt\d{7}`)
 
-// ParseHTML searches IMDb URL in a HTML
-func (m *Movie) ParseHTML(html []byte) error {
+// parseHTML searches IMDb URL in a HTML
+func (m *Movie) parseHTML(html []byte) error {
 	url := reIMDbURL.Find(html)
 	if url == nil {
 		return ErrIMDbURLMissing
 	}
 	m.imdbID = path.Base(string(url))
 	return nil
-}
-
-// IMDbID returns IMDb ID of a Movie
-func (m Movie) IMDbID() string {
-	return m.imdbID
 }

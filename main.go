@@ -10,6 +10,8 @@ package main
 
 import (
 	"log"
+
+	"github.com/magunetto/moviemagnetbot/movie"
 )
 
 func main() {
@@ -17,7 +19,7 @@ func main() {
 	InitModel()
 	log.Printf("model inited")
 
-	InitTMDb()
+	movie.InitTMDb()
 	log.Printf("tmdb inited")
 
 	InitRARBG()

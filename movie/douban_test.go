@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	movieHTMLPart = `
+	doubanHTMLPart = `
 <span class="pl">类型:</span> <span property="v:genre">动作</span> / <span property="v:genre">科幻</span> / <span property="v:genre">冒险</span><br/>
 <span class="pl">官方网站:</span> <a href="http://starwars.com" rel="nofollow" target="_blank">starwars.com</a><br/>
 <span class="pl">制片国家/地区:</span> 美国<br/>
@@ -20,7 +20,7 @@ const (
 IMDb link in Comments: "http://www.imdb.com/title/tt2527337" target="_blank" rel="nofollow">tt2527337</a><br>
 `
 
-	movieHTMLMissingIMDbURL = `
+	doubanHTMLMissingIMDbURL = `
 <span class="pl">类型:</span> <span property="v:genre">动作</span> / <span property="v:genre">科幻</span> / <span property="v:genre">冒险</span><br/>
 <span class="pl">官方网站:</span> <a href="http://starwars.com" rel="nofollow" target="_blank">starwars.com</a><br/>
 <span class="pl">制片国家/地区:</span> 美国<br/>
@@ -30,26 +30,41 @@ IMDb link in Comments: "http://www.imdb.com/title/tt2527337" target="_blank" rel
 <span class="pl">又名:</span> 星球大战：最后绝地武士(港) / 星球大战8 / 星战8 / Star Wars: Episode VIII<br/>
 `
 
-	movieURL = "https://movie.douban.com/subject/1293181/"
+	doubanURL       = "https://movie.douban.com/subject/1293181/"
+	doubanAppURL    = "https://www.douban.com/doubanapp/dispatch?uri=/movie/1293181/&dt_dapp=1"
+	doubanMobileURL = "https://m.douban.com/movie/subject/1293181/"
 )
 
-func TestMovieFetchFromURLOK(t *testing.T) {
+func TestMovieFetchFromDoubanURLOK(t *testing.T) {
 	m := New()
-	err := m.FetchFromURL(movieURL)
+	err := m.FetchFromURL(doubanURL)
 	assert.NoError(t, err)
 	assert.Equal(t, "tt0054215", m.IMDbID())
 }
 
+func TestMovieFetchFromDoubanAppURLOK(t *testing.T) {
+	m := New()
+	err := m.FetchFromURL(doubanAppURL)
+	assert.NoError(t, err)
+	assert.Equal(t, "tt0054215", m.IMDbID())
+}
+
+func TestMovieFetchFromDoubanMobileURLMissingIMDbID(t *testing.T) {
+	m := New()
+	m.FetchFromURL(doubanMobileURL)
+	assert.Equal(t, "", m.IMDbID())
+}
+
 func TestMovieParseHTMLOK(t *testing.T) {
 	m := New()
-	err := m.parseHTML([]byte(movieHTMLPart))
+	err := m.parseHTML([]byte(doubanHTMLPart))
 	assert.NoError(t, err)
 	assert.Equal(t, "tt2527336", m.IMDbID())
 }
 
 func TestMovieParseHTMLMissingIMDbURL(t *testing.T) {
 	m := New()
-	err := m.parseHTML([]byte(movieHTMLMissingIMDbURL))
+	err := m.parseHTML([]byte(doubanHTMLMissingIMDbURL))
 	assert.Equal(t, err, ErrIMDbURLMissing)
 	assert.Equal(t, "", m.IMDbID())
 }

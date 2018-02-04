@@ -59,7 +59,7 @@ func RunBot() {
 		b.Send(m.Sender, replyHelp)
 	})
 	b.Handle(telebot.OnText, func(m *telebot.Message) {
-		log.Printf("@%s: %s", m.Sender.Username, m.Text)
+		log.Printf("%s: %s", getUserName(m.Sender), m.Text)
 
 		// download requst
 		if strings.HasPrefix(m.Text, cmdPrefixDown) {
@@ -105,7 +105,7 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 	// save the torrent for user
 	u := &User{
 		TelegramID:   m.Sender.ID,
-		TelegramName: m.Sender.Username,
+		TelegramName: getUserName(m.Sender),
 	}
 	err = u.appendTorrent(t)
 	if err != nil {
@@ -211,4 +211,12 @@ func torrentSearchHandler(b *telebot.Bot, m *telebot.Message, id string) {
 	isSingleResult := searchTorrents(result, "imdb", id)
 	b.Send(m.Sender, result.String(),
 		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+}
+
+func getUserName(user *telebot.User) string {
+	userName := user.Username
+	if userName == "" {
+		userName = strings.TrimSpace(fmt.Sprintf("%s %s", user.FirstName, user.LastName))
+	}
+	return userName
 }

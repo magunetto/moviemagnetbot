@@ -29,5 +29,6 @@ Bugs? Features? Issues and pull requests are welcome.
 
 ## Alternatives
 
+- [Netflix](https://www.netflix.com/)
 - [showRSS](https://showrss.info/)
 - [Popcorn Time](https://popcorn-time.to/)

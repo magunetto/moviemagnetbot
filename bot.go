@@ -28,7 +28,7 @@ const (
 	replyNoPubStamp = "We could not find this magnet link, please check your input"
 	replyNoTMDb     = "We could not find this movie on TMDb, please check your input"
 	replyNoTorrent  = "We encountered an error while finding this magnet link"
-	replyFeedTips   = "Auto-download every link you requested by subscribing " + userFeedURL
+	replyFeedTips   = "Auto-download every link you requested by subscribing your RSS feed: `%s`"
 	replyTaskAdded  = "Task added to your feed, it will start soon"
 
 	cmdPrefixDown = "/dl"
@@ -117,7 +117,8 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 		b.Send(m.Sender, replyTaskAdded)
 		return
 	}
-	b.Send(m.Sender, fmt.Sprintf(replyFeedTips, u.FeedID))
+	b.Send(m.Sender, fmt.Sprintf(fmt.Sprintf(replyFeedTips, userFeedURL), u.FeedID),
+		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
 }
 
 func tmdbHandler(b *telebot.Bot, m *telebot.Message) {

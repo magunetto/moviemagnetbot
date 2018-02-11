@@ -30,7 +30,7 @@ type User struct {
 type UserTorrent struct {
 	UserID               int
 	TorrentID            int
-	Torrent_DownloadedAt time.Time
+	Torrent_DownloadedAt time.Time // nolint
 }
 
 func (u *User) create() (*User, error) {
@@ -134,7 +134,7 @@ func (u *User) renewFeedChecked() error {
 }
 
 func (u *User) isFeedActive() bool {
-	return time.Now().Sub(u.FeedCheckedAt) < feedCheckThreshold
+	return time.Since(u.FeedCheckedAt) < feedCheckThreshold
 }
 
 // BeforeInsert hook

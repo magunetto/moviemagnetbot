@@ -39,7 +39,10 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 
 	// send the feed
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(rss))
+	_, err = w.Write([]byte(rss))
+	if err != nil {
+		log.Printf("error while sending feed: %s", err)
+	}
 
 	err = u.renewFeedChecked()
 	if err != nil {

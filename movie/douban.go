@@ -18,7 +18,10 @@ func (m *Movie) FetchFromURL(url string) error {
 		return err
 	}
 	pageHTML, err := ioutil.ReadAll(res.Body)
-	res.Body.Close()
+	if err != nil {
+		return err
+	}
+	err = res.Body.Close()
 	if err != nil {
 		return err
 	}

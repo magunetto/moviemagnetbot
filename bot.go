@@ -22,11 +22,9 @@ const (
 
 	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
 	replyRarbgErr   = "We encountered an error while finding magnet links, please try again"
-	replyTMDbErr    = "We encountered an error while finding movies, please try again"
 	replyNoIMDbIDs  = "We encountered an error while finding IMDb IDs for you: "
 	replyNoTorrents = "We have no magnet links for this movie now, please come back later"
 	replyNoPubStamp = "We could not find this magnet link, please check your input"
-	replyNoTMDb     = "We could not find this movie on TMDb, please check your input"
 	replyNoTorrent  = "We encountered an error while finding this magnet link"
 	replyFeedTips   = "Auto-download every link you requested by subscribing your RSS feed: `%s`"
 	replyTaskAdded  = "Task added to your feed, it will start soon"
@@ -36,7 +34,7 @@ const (
 
 	itemsPerMovieSearch = 5
 	itemsPerFeed        = 20
-	feedCheckThreshold  = time.Duration(24 * time.Hour)
+	feedCheckThreshold  = 24 * time.Hour
 )
 
 // RunBot init bot, register handlers, and start the bot
@@ -53,10 +51,16 @@ func RunBot() {
 
 	// bot handlers
 	b.Handle("/start", func(m *telebot.Message) {
-		b.Send(m.Sender, replyHelp)
+		_, err := b.Send(m.Sender, replyHelp)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
 	})
 	b.Handle("/help", func(m *telebot.Message) {
-		b.Send(m.Sender, replyHelp)
+		_, err := b.Send(m.Sender, replyHelp)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
 	})
 	b.Handle(telebot.OnText, func(m *telebot.Message) {
 		log.Printf("%s: %s", getUserName(m.Sender), m.Text)
@@ -87,7 +91,10 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 	pubStamp, err := strconv.Atoi(pubStampString)
 	if err != nil {
 		log.Printf("error while parsing timestamp: %s", err)
-		b.Send(m.Sender, replyNoPubStamp)
+		_, err = b.Send(m.Sender, replyNoPubStamp)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
 		return
 	}
 
@@ -96,11 +103,16 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 	t, err = t.getByPubStamp()
 	if err != nil {
 		log.Printf("error while getting torrent: %s", err)
-		b.Send(m.Sender, replyNoTorrent)
+		_, err = b.Send(m.Sender, replyNoTorrent)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
 		return
 	}
-	magnet := &t.Magnet
-	b.Send(m.Sender, "`"+*magnet+"`", &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
+	_, err = b.Send(m.Sender, fmt.Sprintf("`%s`", t.Magnet), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
+	if err != nil {
+		log.Printf("error while sending message: %s", err)
+	}
 
 	// save the torrent for user
 	u := &User{
@@ -114,11 +126,17 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 	}
 
 	if u.isFeedActive() {
-		b.Send(m.Sender, replyTaskAdded)
+		_, err = b.Send(m.Sender, replyTaskAdded)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
 		return
 	}
-	b.Send(m.Sender, fmt.Sprintf(fmt.Sprintf(replyFeedTips, userFeedURL), u.FeedID),
+	_, err = b.Send(m.Sender, fmt.Sprintf(fmt.Sprintf(replyFeedTips, userFeedURL), u.FeedID),
 		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
+	if err != nil {
+		log.Printf("error while sending message: %s", err)
+	}
 }
 
 func tmdbHandler(b *telebot.Bot, m *telebot.Message) {
@@ -126,13 +144,19 @@ func tmdbHandler(b *telebot.Bot, m *telebot.Message) {
 	buffer := new(bytes.Buffer)
 	fmt.Fprintf(buffer, "§ %s\n", m.Text)
 	searchTorrents(buffer, "tmdb", tmdbID)
-	b.Send(m.Sender, buffer.String(), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
+	_, err := b.Send(m.Sender, buffer.String(), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
+	if err != nil {
+		log.Printf("error while sending message: %s", err)
+	}
 }
 
 func searchHandler(b *telebot.Bot, m *telebot.Message) {
 	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
 	if err != nil {
-		b.Send(m.Sender, replyNoIMDbIDs+err.Error())
+		_, err = b.Send(m.Sender, replyNoIMDbIDs+err.Error())
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
 		return
 	}
 
@@ -183,8 +207,11 @@ func findIMDbIDs(s string) []string {
 func movieSearchHandler(b *telebot.Bot, m *telebot.Message) {
 	buf := new(bytes.Buffer)
 	isSingleResult := renderMovieSearchResult(buf, m.Text)
-	b.Send(m.Sender, buf.String(),
+	_, err := b.Send(m.Sender, buf.String(),
 		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+	if err != nil {
+		log.Printf("error while sending message: %s", err)
+	}
 }
 
 func renderMovieSearchResult(w io.Writer, keyword string) bool {
@@ -210,8 +237,11 @@ func torrentSearchHandler(b *telebot.Bot, m *telebot.Message, id string) {
 	result := new(bytes.Buffer)
 	fmt.Fprintf(result, "§ /%s\n", id)
 	isSingleResult := searchTorrents(result, "imdb", id)
-	b.Send(m.Sender, result.String(),
+	_, err := b.Send(m.Sender, result.String(),
 		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
+	if err != nil {
+		log.Printf("error while sending message: %s", err)
+	}
 }
 
 func getUserName(user *telebot.User) string {

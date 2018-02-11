@@ -17,6 +17,7 @@ var (
 	tapi *tmdb.TMDB
 
 	errTMDbSearchNoResult = errors.New("No movies found on TMDb, please check your input")
+	errTMDbSearchError    = errors.New("An error occured while finding movies, please try again")
 )
 
 // InitTMDb init TMDb API
@@ -33,7 +34,7 @@ func SearchMovies(keyword string, limit int) ([]Movie, error) {
 	result, err := tapi.SearchMulti(keyword)
 	if err != nil {
 		log.Printf("error while querying tmdb: %s", err)
-		return nil, err
+		return nil, errTMDbSearchError
 	}
 	if len(result.Results) == 0 {
 		return nil, errTMDbSearchNoResult

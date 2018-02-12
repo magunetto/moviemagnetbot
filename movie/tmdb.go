@@ -51,6 +51,9 @@ func newMoviesBySearch(result tmdb.SearchMultiResult, limit int) []Movie {
 		if i == limit {
 			break
 		}
+		if r.MediaType != "movie" && r.MediaType != "tv" {
+			break
+		}
 
 		m := New()
 		m.TMDbID = r.ID

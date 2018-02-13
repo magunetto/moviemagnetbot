@@ -228,7 +228,11 @@ func renderMovieSearchResult(w io.Writer, keyword string) bool {
 func renderMovies(w io.Writer, movies []movie.Movie) {
 	for _, m := range movies {
 		command := fmt.Sprintf("%s%d", cmdPrefixTMDb, m.TMDbID)
-		fmt.Fprintf(w, "%s (%s)\n", m.Title, m.Date[0:4])
+		if m.Date != "" {
+			fmt.Fprintf(w, "%s (%s)\n", m.Title, m.Date[0:4])
+		} else {
+			fmt.Fprintf(w, "%s\n", m.Title)
+		}
 		fmt.Fprintf(w, "▸ %s [¶](%s)\n", command, m.TMDbURL)
 	}
 }

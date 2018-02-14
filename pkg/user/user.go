@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"fmt"
@@ -8,10 +8,19 @@ import (
 	"github.com/go-pg/pg/orm"
 	"github.com/gorilla/feeds"
 	"github.com/speps/go-hashids"
+
+	"github.com/magunetto/moviemagnetbot/pkg/db"
+	"github.com/magunetto/moviemagnetbot/pkg/torrent"
 )
 
 const (
 	hashAlphabet = "0123456789abcdef"
+
+	userFeedTitle = "Movie Magnet Bot feed"
+	userFeedURL   = "https://moviemagnetbot.herokuapp.com/tasks/%s.xml"
+
+	itemsPerFeed       = 20
+	feedCheckThreshold = 24 * time.Hour
 )
 
 // User (i.e. Downloader)
@@ -23,18 +32,18 @@ type User struct {
 	TelegramName  string
 	FeedID        string
 	FeedCheckedAt time.Time
-	Torrents      []Torrent `pg:",many2many:user_torrents"`
+	Torrents      []torrent.Torrent `pg:",many2many:user_torrents"`
 }
 
 // UserTorrent is about which user download what torrents
-type UserTorrent struct {
+type UserTorrent struct { // nolint
 	UserID               int
 	TorrentID            int
 	Torrent_DownloadedAt time.Time // nolint
 }
 
 func (u *User) create() (*User, error) {
-	_, err := db.Model(u).
+	_, err := db.DB.Model(u).
 		Where("telegram_id= ?telegram_id").
 		OnConflict("DO NOTHING").
 		SelectOrInsert()
@@ -74,25 +83,27 @@ func (u *User) getByTelegramID() (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.Model(u).Where("telegram_id = ?", u.TelegramID).Select()
+	err = db.DB.Model(u).Where("telegram_id = ?", u.TelegramID).Select()
 	return u, err
 }
 
-func (u *User) getByFeedID() (*User, error) {
-	err := db.Model(u).Where("feed_id = ?", u.FeedID).Select()
+// GetByFeedID find User by FeedID
+func (u *User) GetByFeedID() (*User, error) {
+	err := db.DB.Model(u).Where("feed_id = ?", u.FeedID).Select()
 	return u, err
 }
 
-func (u *User) appendTorrent(t *Torrent) error {
+// AppendTorrent apeend Torrent to User
+func (u *User) AppendTorrent(t *torrent.Torrent) error {
 	u, err := u.getByTelegramID()
 	if err != nil {
 		return err
 	}
-	return db.Insert(&UserTorrent{u.ID, t.ID, time.Now()})
+	return db.DB.Insert(&UserTorrent{u.ID, t.ID, time.Now()})
 }
 
-func (u *User) getTorrents(limit int) ([]Torrent, error) {
-	err := db.Model(u).Column("user.*", "Torrents").
+func (u *User) getTorrents(limit int) ([]torrent.Torrent, error) {
+	err := db.DB.Model(u).Column("user.*", "Torrents").
 		Relation("Torrents", func(q *orm.Query) (*orm.Query, error) {
 			return q.Order("torrent__downloaded_at DESC").Limit(limit), nil
 		}).
@@ -101,13 +112,19 @@ func (u *User) getTorrents(limit int) ([]Torrent, error) {
 }
 
 func (u *User) update() error {
-	return db.Update(u)
+	return db.DB.Update(u)
 }
 
-func (u *User) generateFeed() (string, error) {
+// FeedURL returns User’s feed URL
+func (u *User) FeedURL() string {
+	return fmt.Sprintf(userFeedURL, u.FeedID)
+}
+
+// GenerateFeed returns User’s feed
+func (u *User) GenerateFeed() (string, error) {
 	feed := &feeds.Feed{
 		Title:   userFeedTitle,
-		Link:    &feeds.Link{Href: fmt.Sprintf(userFeedURL, u.FeedID)},
+		Link:    &feeds.Link{Href: u.FeedURL()},
 		Created: time.Now(),
 	}
 	torrents, err := u.getTorrents(itemsPerFeed)
@@ -128,12 +145,14 @@ func (u *User) generateFeed() (string, error) {
 	return rss, nil
 }
 
-func (u *User) renewFeedChecked() error {
+// RenewFeedChecked renews User’s FeedCheckedAt
+func (u *User) RenewFeedChecked() error {
 	u.FeedCheckedAt = time.Now()
 	return u.update()
 }
 
-func (u *User) isFeedActive() bool {
+// IsFeedActive tells if the User’s feed has been requested recently
+func (u *User) IsFeedActive() bool {
 	return time.Since(u.FeedCheckedAt) < feedCheckThreshold
 }
 

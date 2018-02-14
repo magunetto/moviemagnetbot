@@ -28,8 +28,8 @@ func InitTMDb() {
 	}
 }
 
-// SearchMovies search movies on TMDb
-func SearchMovies(keyword string, limit int) ([]Movie, error) {
+// Search searches movies on TMDb
+func Search(keyword string, limit int) (*[]Movie, error) {
 
 	result, err := tapi.SearchMulti(keyword)
 	if err != nil {
@@ -40,10 +40,10 @@ func SearchMovies(keyword string, limit int) ([]Movie, error) {
 		return nil, errTMDbSearchNoResult
 	}
 
-	return newMoviesBySearch(result, limit), nil
+	return newMoviesBySearch(&result, limit), nil
 }
 
-func newMoviesBySearch(result tmdb.SearchMultiResult, limit int) []Movie {
+func newMoviesBySearch(result *tmdb.SearchMultiResult, limit int) *[]Movie {
 
 	movies := []Movie{}
 
@@ -68,5 +68,5 @@ func newMoviesBySearch(result tmdb.SearchMultiResult, limit int) []Movie {
 		movies = append(movies, m)
 	}
 
-	return movies
+	return &movies
 }

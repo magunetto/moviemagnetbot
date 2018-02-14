@@ -1,10 +1,9 @@
-package main
+package torrent
 
 import (
 	"errors"
-	"fmt"
-	"io"
 	"log"
+	"strings"
 	"time"
 
 	rarbg "github.com/magunetto/go-torrentapi"
@@ -19,6 +18,9 @@ const (
 
 var (
 	rapi *rarbg.API
+
+	errRARBG      = errors.New("We encountered an error while finding magnet links, please try again")
+	errNoTorrents = errors.New("We have no magnet links for this movie now, please come back later")
 )
 
 // InitRARBG init RARBG API
@@ -30,24 +32,43 @@ func InitRARBG() {
 	rapi = api
 }
 
-func searchTorrents(w io.Writer, service string, id string) (isSingleResult bool) {
+// Search take keyword to search torrents
+func Search(keyword string) (*[]Torrent, error) {
 
-	torrentResults, err := searchByServiceID(service, id)
+	keywords := strings.Split(keyword, " ")
+
+	torrentResults, err := searchByServiceID(keywords[0], keywords[1])
 	if err != nil {
 		log.Printf("error while querying rarbg: %s", err)
-		fmt.Fprintln(w, replyRarbgErr)
-		return false
+		return nil, errRARBG
 	}
 
 	if len(torrentResults) == 0 {
-		log.Printf("no torrents found for this movie: %s", id)
-		fmt.Fprintln(w, replyNoTorrents)
-		return false
+		log.Printf("no torrents found for this movie: %s", keywords[1])
+		return nil, errNoTorrents
 	}
 
-	renderTorrents(w, torrentResults)
+	torrents, err := newTorrentsBySearch(&torrentResults)
+	if err != nil {
+		return nil, err
+	}
 
-	return len(torrentResults) == 1
+	return torrents, nil
+}
+
+func newTorrentsBySearch(trs *rarbg.TorrentResults) (*[]Torrent, error) {
+
+	torrents := []Torrent{}
+
+	for _, tr := range *trs {
+		t, err := saveTorrent(&tr)
+		if err != nil {
+			continue
+		}
+		torrents = append(torrents, *t)
+	}
+
+	return &torrents, nil
 }
 
 func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) {
@@ -61,19 +82,7 @@ func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) 
 	return rapi.Search()
 }
 
-func renderTorrents(w io.Writer, trs []rarbg.TorrentResult) {
-
-	for _, tr := range trs {
-		t, err := saveTorrent(tr)
-		if err != nil {
-			log.Printf("error while saving torrent: %s", err)
-			continue
-		}
-		t.renderTorrent(w)
-	}
-}
-
-func saveTorrent(tr rarbg.TorrentResult) (*Torrent, error) {
+func saveTorrent(tr *rarbg.TorrentResult) (*Torrent, error) {
 
 	t := &Torrent{TorrentResult: tr}
 	if tr.Title == "" {

@@ -1,4 +1,4 @@
-package main
+package http
 
 import (
 	"log"
@@ -6,10 +6,12 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+
+	"github.com/magunetto/moviemagnetbot/pkg/user"
 )
 
-// RunHTTPServer register handlers and start HTTP server
-func RunHTTPServer() {
+// RunServer register handlers and start HTTP server
+func RunServer() {
 
 	// http handlers
 	r := mux.NewRouter()
@@ -22,15 +24,15 @@ func RunHTTPServer() {
 func feedHandler(w http.ResponseWriter, r *http.Request) {
 
 	// query user by feed id
-	u := &User{FeedID: mux.Vars(r)["user"]}
-	u, err := u.getByFeedID()
+	u := &user.User{FeedID: mux.Vars(r)["user"]}
+	u, err := u.GetByFeedID()
 	if err != nil {
 		log.Printf("error while getting user: %s", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	rss, err := u.generateFeed()
+	rss, err := u.GenerateFeed()
 	if err != nil {
 		log.Printf("error while generating feed: %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -44,7 +46,7 @@ func feedHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error while sending feed: %s", err)
 	}
 
-	err = u.renewFeedChecked()
+	err = u.RenewFeedChecked()
 	if err != nil {
 		log.Printf("error while updating user: %s", err)
 	}

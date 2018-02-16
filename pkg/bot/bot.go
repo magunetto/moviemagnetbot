@@ -10,6 +10,7 @@ import (
 
 	"gopkg.in/tucnak/telebot.v2"
 
+	"github.com/magunetto/moviemagnetbot/pkg/movie"
 	"github.com/magunetto/moviemagnetbot/pkg/torrent"
 	"github.com/magunetto/moviemagnetbot/pkg/user"
 )
@@ -131,7 +132,7 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 }
 
 func searchHandler(b *telebot.Bot, m *telebot.Message) {
-	imdbIDs, err := searchIMDbIDsFromMessage(m.Text)
+	imdbIDs, err := movie.SearchIMDbID(m.Text)
 	if err != nil {
 		_, err = b.Send(m.Sender, replyNoIMDbIDs+err.Error())
 		if err != nil {

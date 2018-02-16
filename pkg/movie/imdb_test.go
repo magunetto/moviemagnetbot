@@ -1,4 +1,4 @@
-package bot
+package movie
 
 import (
 	"testing"
@@ -53,14 +53,14 @@ func TestFindIMDbIDsMissing(t *testing.T) {
 	assert.Len(t, ids, 0)
 }
 
-func TestSearchIMDbIDsFromMessageIMDbURLOK(t *testing.T) {
-	ids, err := searchIMDbIDsFromMessage(`http://www.imdb.com/title/tt2527336`)
+func TestSearchIMDbIDIMDbURLOK(t *testing.T) {
+	ids, err := SearchIMDbID(`http://www.imdb.com/title/tt2527336`)
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"tt2527336"}, ids)
 }
 
-func TestSearchIMDbIDsFromMessageMultipleURLOK(t *testing.T) {
-	ids, err := searchIMDbIDsFromMessage(`
+func TestSearchIMDbIDMultipleURLOK(t *testing.T) {
+	ids, err := SearchIMDbID(`
 		http://www.imdb.com/title/tt2527336
 		https://movie.douban.com/subject/22265634
 	`)
@@ -68,8 +68,8 @@ func TestSearchIMDbIDsFromMessageMultipleURLOK(t *testing.T) {
 	assert.Equal(t, []string{"tt2527336", "tt2527336"}, ids)
 }
 
-func TestSearchIMDbIDsFromMessageDoubanURLOK(t *testing.T) {
-	ids, err := searchIMDbIDsFromMessage(`https://movie.douban.com/subject/22265634/`)
+func TestSearchIMDbIDDoubanURLOK(t *testing.T) {
+	ids, err := SearchIMDbID(`https://movie.douban.com/subject/22265634/`)
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"tt2527336"}, ids)
 }

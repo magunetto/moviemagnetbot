@@ -11,12 +11,12 @@ import (
 
 // Torrent (magnet links)
 type Torrent struct {
-	ID                   int
-	Title                string
-	Magnet               string
-	PubStamp             int64
-	DownloadedAt         time.Time `sql:"-"`
-	*rarbg.TorrentResult `sql:"-"`
+	ID                  int
+	Title               string
+	Magnet              string
+	PubStamp            int64
+	DownloadedAt        time.Time `sql:"-"`
+	rarbg.TorrentResult `sql:"-"`
 }
 
 func (t *Torrent) create() (*Torrent, error) {

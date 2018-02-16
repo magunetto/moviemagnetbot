@@ -61,7 +61,7 @@ func newTorrentsBySearch(trs *rarbg.TorrentResults) (*[]Torrent, error) {
 	torrents := []Torrent{}
 
 	for _, tr := range *trs {
-		t, err := saveTorrent(&tr)
+		t, err := saveTorrent(tr)
 		if err != nil {
 			continue
 		}
@@ -82,7 +82,7 @@ func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) 
 	return rapi.Search()
 }
 
-func saveTorrent(tr *rarbg.TorrentResult) (*Torrent, error) {
+func saveTorrent(tr rarbg.TorrentResult) (*Torrent, error) {
 
 	t := &Torrent{TorrentResult: tr}
 	if tr.Title == "" {

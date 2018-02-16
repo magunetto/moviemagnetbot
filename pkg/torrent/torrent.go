@@ -43,11 +43,11 @@ func humanizeSize(s uint64) string {
 	switch {
 	case size < 1024:
 		return fmt.Sprintf("%d", uint64(size))
-	case size < 1024*1014:
-		return fmt.Sprintf("%.2fK", size/1024)
+	case size < 1024*1024:
+		return fmt.Sprintf("%.1fK", size/1024)
 	case size < 1024*1024*1024:
-		return fmt.Sprintf("%.2fM", size/1024/1024)
+		return fmt.Sprintf("%.1fM", size/1024/1024)
 	default:
-		return fmt.Sprintf("%.2fG", size/1024/1024/1024)
+		return fmt.Sprintf("%.1fG", size/1024/1024/1024)
 	}
 }

@@ -13,15 +13,15 @@ func TestHumanizeSizeInByte(t *testing.T) {
 
 func TestHumanizeSizeInKB(t *testing.T) {
 	size := humanizeSize(1024)
-	assert.Equal(t, "1.00K", size)
+	assert.Equal(t, "1.0K", size)
 }
 
 func TestHumanizeSizeInMB(t *testing.T) {
 	size := humanizeSize(1024 * 1024)
-	assert.Equal(t, "1.00M", size)
+	assert.Equal(t, "1.0M", size)
 }
 
 func TestHumanizeSizeInGB(t *testing.T) {
 	size := humanizeSize(1024 * 1024 * 1024)
-	assert.Equal(t, "1.00G", size)
+	assert.Equal(t, "1.0G", size)
 }

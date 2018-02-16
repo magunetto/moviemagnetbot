@@ -56,6 +56,17 @@ func Search(keyword string) (*[]Torrent, error) {
 	return torrents, nil
 }
 
+func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) {
+	switch service {
+	case "imdb":
+		rapi.SearchIMDb(id)
+	case "tmdb":
+		rapi.SearchTheMovieDb(id)
+	}
+	rapi.Ranked(ranked).Sort(sort).Format(format).Limit(limit)
+	return rapi.Search()
+}
+
 func newTorrentsBySearch(trs *rarbg.TorrentResults) (*[]Torrent, error) {
 
 	torrents := []Torrent{}
@@ -69,17 +80,6 @@ func newTorrentsBySearch(trs *rarbg.TorrentResults) (*[]Torrent, error) {
 	}
 
 	return &torrents, nil
-}
-
-func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) {
-	switch service {
-	case "imdb":
-		rapi.SearchIMDb(id)
-	case "tmdb":
-		rapi.SearchTheMovieDb(id)
-	}
-	rapi.Ranked(ranked).Sort(sort).Format(format).Limit(limit)
-	return rapi.Search()
 }
 
 func saveTorrent(tr rarbg.TorrentResult) (*Torrent, error) {

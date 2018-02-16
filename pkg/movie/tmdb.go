@@ -17,7 +17,7 @@ var (
 	tapi *tmdb.TMDB
 
 	errTMDbSearchNoResult = errors.New("No movies found on TMDb, please check your input")
-	errTMDbSearchError    = errors.New("An error occured while finding movies, please try again")
+	errTMDbSearchError    = errors.New("An error occurred while finding movies, please try again")
 )
 
 // InitTMDb init TMDb API

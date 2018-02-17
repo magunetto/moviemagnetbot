@@ -2,12 +2,11 @@ package movie
 
 // Movie object
 type Movie struct {
-	imdbID    string
-	TMDbID    int
-	TMDbURL   string
-	Title     string
-	Date      string
-	mediaType string
+	imdbID  string
+	TMDbID  int
+	TMDbURL string
+	Title   string
+	Date    string
 }
 
 // New returns a new Movie

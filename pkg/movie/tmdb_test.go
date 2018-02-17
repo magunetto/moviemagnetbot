@@ -7,24 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestInitTMDbEnvKeyOK(t *testing.T) {
-	os.Setenv("TMDB_API_TOKEN", "test")
+func TestInitTMDbOK(t *testing.T) {
+	os.Setenv("TMDB_API_TOKEN", "523587afe262c34af9ee7794c5f8de81")
 	InitTMDb()
-	assert.Len(t, tapi.APIKey, 4)
-}
-
-func TestInitTMDbDefaultKeyOK(t *testing.T) {
-	os.Setenv("TMDB_API_TOKEN", "")
-	InitTMDb()
-	assert.Len(t, tapi.APIKey, 32)
 }
 
 func TestSearchMovieAndTVOK(t *testing.T) {
 	InitTMDb()
-	movies, err := Search("黑镜", 3)
+	movies, err := Search("La La Land", 1)
 	assert.NoError(t, err)
-	assert.Len(t, *movies, 3)
-	assert.Equal(t, (*movies)[0].TMDbID, 42009)
+	assert.Len(t, *movies, 2)
+	assert.Equal(t, (*movies)[0].TMDbID, 313369)
 }
 
 func TestSearchMovieAndPersonOK(t *testing.T) {

@@ -9,7 +9,14 @@
 
 [[projects]]
   name = "github.com/go-pg/pg"
-  packages = [".","internal","internal/parser","internal/pool","orm","types"]
+  packages = [
+    ".",
+    "internal",
+    "internal/parser",
+    "internal/pool",
+    "orm",
+    "types"
+  ]
   revision = "e41e92dcded03a07b880815ec5892907883c036b"
   version = "v6.7.1"
 
@@ -44,12 +51,6 @@
   revision = "e889fd3f2262dba045600df88bc86f56393a7a4b"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/magunetto/tmdb"
-  packages = ["."]
-  revision = "69528804f09ffe6244159f7fb9efa3a0fed3eb5d"
-
-[[projects]]
   name = "github.com/pkg/errors"
   packages = ["."]
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
@@ -60,6 +61,12 @@
   packages = ["difflib"]
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/ryanbradynd05/go-tmdb"
+  packages = ["."]
+  revision = "49d55dc561c641f56c82f2fddff0573892920557"
 
 [[projects]]
   branch = "master"
@@ -82,6 +89,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fbce9c685b2170d25aa15ae878d34744610efd35a1b4e020b654269a0cc91e81"
+  inputs-digest = "12d796fe3faefe058ceb56f06dcff28120d0c1a7ff379cdc5abda3ed86a18990"
   solver-name = "gps-cdcl"
   solver-version = 1

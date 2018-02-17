@@ -30,4 +30,4 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/magunetto/tmdb"
+  name = "github.com/ryanbradynd05/go-tmdb"

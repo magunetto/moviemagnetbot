@@ -17,8 +17,8 @@
     "orm",
     "types"
   ]
-  revision = "e41e92dcded03a07b880815ec5892907883c036b"
-  version = "v6.7.1"
+  revision = "eff1632b1caea7c554b174d5551ff2791021810c"
+  version = "v6.9.3"
 
 [[projects]]
   name = "github.com/gorilla/context"
@@ -84,7 +84,7 @@
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
   packages = ["."]
-  revision = "2cebf54e145e9a5733e1220ddce94e338b4f90ef"
+  revision = "24146200389c0856503e7f9a40d21170e55692a2"
 
 [solve-meta]
   analyzer-name = "dep"

@@ -20,14 +20,14 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
-[[constraint]]
+[[override]]
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
 
-[[constraint]]
+[[override]]
   branch = "master"
   name = "github.com/speps/go-hashids"
 
-[[constraint]]
+[[override]]
   branch = "master"
   name = "github.com/ryanbradynd05/go-tmdb"

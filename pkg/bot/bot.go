@@ -43,19 +43,23 @@ func Run() {
 
 	// bot handlers
 	b.Handle("/start", func(m *telebot.Message) {
-		_, err := b.Send(m.Sender, replyHelp)
+		_, err := b.Send(m.Chat, replyHelp)
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}
 	})
 	b.Handle("/help", func(m *telebot.Message) {
-		_, err := b.Send(m.Sender, replyHelp)
+		_, err := b.Send(m.Chat, replyHelp)
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}
 	})
 	b.Handle(telebot.OnText, func(m *telebot.Message) {
-		log.Printf("%s: %s", getUserName(m.Sender), m.Text)
+		sender := getUserName(m.Sender)
+		if m.Chat.Type != telebot.ChatPrivate {
+			sender += fmt.Sprintf(" @ %s", m.Chat.Title)
+		}
+		log.Printf("%s: %s", sender, m.Text)
 
 		// download requst
 		if strings.HasPrefix(m.Text, cmdPrefixDown) {
@@ -79,11 +83,12 @@ func Run() {
 func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 
 	// get `PubStamp` from command, e.g. /dl1514983115
-	pubStampString := m.Text[len(cmdPrefixDown):len(m.Text)]
+	pubStampString := strings.Split(m.Text, "@")[0]
+	pubStampString = strings.TrimPrefix(pubStampString, cmdPrefixDown)
 	pubStamp, err := strconv.Atoi(pubStampString)
 	if err != nil {
 		log.Printf("error while parsing timestamp: %s", err)
-		_, err = b.Send(m.Sender, replyNoPubStamp)
+		_, err = b.Send(m.Chat, replyNoPubStamp)
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}
@@ -95,13 +100,13 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 	t, err = t.GetByPubStamp()
 	if err != nil {
 		log.Printf("error while getting torrent: %s", err)
-		_, err = b.Send(m.Sender, replyNoTorrent)
+		_, err = b.Send(m.Chat, replyNoTorrent)
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}
 		return
 	}
-	_, err = b.Send(m.Sender, fmt.Sprintf("`%s`", t.Magnet), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
+	_, err = b.Send(m.Chat, fmt.Sprintf("`%s`", t.Magnet), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
 	if err != nil {
 		log.Printf("error while sending message: %s", err)
 	}
@@ -134,7 +139,7 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 func searchHandler(b *telebot.Bot, m *telebot.Message) {
 	imdbIDs, err := movie.SearchIMDbID(m.Text)
 	if err != nil {
-		_, err = b.Send(m.Sender, replyNoIMDbIDs+err.Error())
+		_, err = b.Send(m.Chat, replyNoIMDbIDs+err.Error())
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}

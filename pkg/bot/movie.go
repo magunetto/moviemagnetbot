@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"strings"
 
 	telebot "gopkg.in/tucnak/telebot.v2"
 
@@ -13,8 +14,10 @@ import (
 
 func movieSearchHandler(b *telebot.Bot, m *telebot.Message) {
 	buf := new(bytes.Buffer)
-	isSingleResult := renderMovieResult(buf, m.Text)
-	_, err := b.Send(m.Sender, buf.String(),
+	keyword := strings.Split(m.Text, "@")[0]
+	keyword = strings.TrimPrefix(keyword, "/")
+	isSingleResult := renderMovieResult(buf, keyword)
+	_, err := b.Send(m.Chat, buf.String(),
 		&telebot.SendOptions{ParseMode: telebot.ModeMarkdown, DisableWebPagePreview: !isSingleResult})
 	if err != nil {
 		log.Printf("error while sending message: %s", err)

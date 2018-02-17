@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"strings"
 
 	telebot "gopkg.in/tucnak/telebot.v2"
 
@@ -18,14 +19,15 @@ func imdbTorrentSearchHandler(b *telebot.Bot, m *telebot.Message, id string) {
 }
 
 func tmdbTorrentSearchHandler(b *telebot.Bot, m *telebot.Message) {
-	id := m.Text[len(cmdPrefixTMDb):len(m.Text)]
+	id := strings.Split(m.Text, "@")[0]
+	id = strings.TrimPrefix(id, cmdPrefixTMDb)
 	buf := new(bytes.Buffer)
 	renderTorrentResult(buf, "tmdb "+id)
 	torrentResultHandler(buf, b, m)
 }
 
 func torrentResultHandler(s fmt.Stringer, b *telebot.Bot, m *telebot.Message) {
-	_, err := b.Send(m.Sender, s.String(), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
+	_, err := b.Send(m.Chat, s.String(), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
 	if err != nil {
 		log.Printf("error while sending message: %s", err)
 	}

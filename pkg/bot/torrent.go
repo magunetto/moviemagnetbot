@@ -38,6 +38,7 @@ func renderTorrentResult(w io.Writer, keyword string) {
 	torrents, err := torrent.Search(keyword)
 	if err != nil {
 		fmt.Fprintln(w, err)
+		return
 	}
 	renderTorrents(w, torrents)
 }

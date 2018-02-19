@@ -8,10 +8,10 @@
 
 ## Features
 
-- Search movies and TVs by names or IMDb / Douban links
-- Download them automatically by one click
+- Search movies and TVs and magnet links of them
+- Download them automatically by one tap
 
-*[More to come](https://github.com/magunetto/moviemagnetbot/wiki/Roadmap)*
+*[See complete list and future plans](https://github.com/magunetto/moviemagnetbot/wiki/Features)*
 
 ## Usage
 
@@ -25,7 +25,8 @@
 
 ## Contributing
 
-Bugs? Features? Issues and pull requests are welcome.
+- Add your thoughts of [features](https://github.com/magunetto/moviemagnetbot/wiki/Features).
+- Fork this project, issues and pull requests are welcome.
 
 ## Alternatives
 

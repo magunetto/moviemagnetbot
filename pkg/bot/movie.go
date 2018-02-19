@@ -26,7 +26,7 @@ func movieSearchHandler(b *telebot.Bot, m *telebot.Message) {
 
 func renderMovieResult(w io.Writer, keyword string) bool {
 	fmt.Fprintf(w, "§ %s\n", keyword)
-	movies, err := movie.Search(keyword, itemsPerMovieSearch)
+	movies, err := movie.Search(keyword, itemsInMovieResult)
 	if err != nil {
 		fmt.Fprintln(w, err)
 		return false

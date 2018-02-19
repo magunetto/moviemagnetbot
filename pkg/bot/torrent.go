@@ -35,7 +35,7 @@ func torrentResultHandler(s fmt.Stringer, b *telebot.Bot, m *telebot.Message) {
 
 func renderTorrentResult(w io.Writer, keyword string) {
 	fmt.Fprintf(w, "§ %s\n", keyword)
-	torrents, err := torrent.Search(keyword)
+	torrents, err := torrent.Search(keyword, itemsInTorrentResult)
 	if err != nil {
 		fmt.Fprintln(w, err)
 		return

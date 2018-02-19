@@ -26,7 +26,8 @@ const (
 	cmdPrefixDown = "/dl"
 	cmdPrefixTMDb = "/tmdb"
 
-	itemsPerMovieSearch = 5
+	itemsInMovieResult   = 5
+	itemsInTorrentResult = 10
 )
 
 // Run init bot, register handlers, and start the bot

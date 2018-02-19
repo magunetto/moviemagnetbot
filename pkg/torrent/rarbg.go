@@ -33,7 +33,7 @@ func InitRARBG() {
 }
 
 // Search take keyword to search torrents
-func Search(keyword string) (*[]Torrent, error) {
+func Search(keyword string, limit int) (*[]Torrent, error) {
 
 	keywords := strings.Split(keyword, " ")
 
@@ -48,7 +48,7 @@ func Search(keyword string) (*[]Torrent, error) {
 		return nil, errNoTorrents
 	}
 
-	torrents, err := newTorrentsBySearch(&torrentResults)
+	torrents, err := newTorrentsBySearch(&torrentResults, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -67,11 +67,14 @@ func searchByServiceID(service string, id string) (rarbg.TorrentResults, error) 
 	return rapi.Search()
 }
 
-func newTorrentsBySearch(trs *rarbg.TorrentResults) (*[]Torrent, error) {
+func newTorrentsBySearch(trs *rarbg.TorrentResults, limit int) (*[]Torrent, error) {
 
 	torrents := []Torrent{}
 
-	for _, tr := range *trs {
+	for i, tr := range *trs {
+		if i == limit {
+			break
+		}
 		t, err := saveTorrent(tr)
 		if err != nil {
 			continue

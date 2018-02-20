@@ -46,6 +46,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/magunetto/go-tmdb"
+  packages = ["."]
+  revision = "4f88bfd8260f14f544c0c47e81d07ec4d3685db6"
+
+[[projects]]
+  branch = "master"
   name = "github.com/magunetto/go-torrentapi"
   packages = ["."]
   revision = "e889fd3f2262dba045600df88bc86f56393a7a4b"
@@ -61,12 +67,6 @@
   packages = ["difflib"]
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/ryanbradynd05/go-tmdb"
-  packages = ["."]
-  revision = "49d55dc561c641f56c82f2fddff0573892920557"
 
 [[projects]]
   branch = "master"
@@ -89,6 +89,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "12d796fe3faefe058ceb56f06dcff28120d0c1a7ff379cdc5abda3ed86a18990"
+  inputs-digest = "afbedc3e0457fc1f9bdfaf8c0f205f16282fff1252d099ea4523a3220d734b95"
   solver-name = "gps-cdcl"
   solver-version = 1

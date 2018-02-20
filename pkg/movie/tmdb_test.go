@@ -22,10 +22,10 @@ func TestSearchMovieAndTVOK(t *testing.T) {
 
 func TestSearchMovieAndPersonOK(t *testing.T) {
 	InitTMDb()
-	movies, err := Search("Lady Bird", 2)
+	movies, err := Search("Portman", 1)
 	assert.NoError(t, err)
-	assert.Len(t, *movies, 1)
-	assert.Equal(t, (*movies)[0].TMDbID, 391713)
+	assert.Len(t, *movies, 2)
+	assert.Equal(t, (*movies)[0].TMDbID, 298545)
 }
 
 func TestSearchNoResult(t *testing.T) {

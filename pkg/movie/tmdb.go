@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/ryanbradynd05/go-tmdb"
+	"github.com/magunetto/go-tmdb"
 )
 
 const (
@@ -46,29 +46,58 @@ func newMoviesBySearch(result *tmdb.MultiSearchResults, limit int) *[]Movie {
 
 	movies := []Movie{}
 
-	for i, r := range result.GetMoviesResults() {
-		if i == limit {
-			break
-		}
-		m := New()
-		m.TMDbID = r.ID
-		m.Title = r.Title
-		m.Date = r.ReleaseDate
-		m.TMDbURL = fmt.Sprintf(tmdbURLFmt, r.MediaType, r.ID)
-		movies = append(movies, m)
-	}
+	movies = append(movies, *(newMoviesByTMDbResults(result.GetMoviesResults(), limit))...)
+	movies = append(movies, *(newTVsByTMDbResults(result.GetTvResults(), limit))...)
 
-	for i, r := range result.GetTvResults() {
+	for i, r := range result.GetPersonResults() {
 		if i == limit {
 			break
 		}
-		m := New()
-		m.TMDbID = r.ID
-		m.Title = r.Name
-		m.Date = r.FirstAirDate
-		m.TMDbURL = fmt.Sprintf(tmdbURLFmt, r.MediaType, r.ID)
-		movies = append(movies, m)
+		movies = append(movies, *(newMoviesByTMDbResults(r.GetMoviesKnownFor(), limit))...)
+		movies = append(movies, *(newTVsByTMDbResults(r.GetTvKnownFor(), limit))...)
 	}
 
 	return &movies
+}
+
+func newMoviesByTMDbResults(results []tmdb.MultiSearchMovieInfo, limit int) *[]Movie {
+	movies := []Movie{}
+	for i, r := range results {
+		if i == limit {
+			break
+		}
+		m := newMovieByTMDbResult(&r)
+		movies = append(movies, *m)
+	}
+	return &movies
+}
+
+func newTVsByTMDbResults(results []tmdb.MultiSearchTvInfo, limit int) *[]Movie {
+	movies := []Movie{}
+	for i, r := range results {
+		if i == limit {
+			break
+		}
+		m := newTVByTMDbResult(&r)
+		movies = append(movies, *m)
+	}
+	return &movies
+}
+
+func newMovieByTMDbResult(r *tmdb.MultiSearchMovieInfo) *Movie {
+	m := New()
+	m.TMDbID = r.ID
+	m.Title = r.Title
+	m.Date = r.ReleaseDate
+	m.TMDbURL = fmt.Sprintf(tmdbURLFmt, r.MediaType, r.ID)
+	return &m
+}
+
+func newTVByTMDbResult(r *tmdb.MultiSearchTvInfo) *Movie {
+	m := New()
+	m.TMDbID = r.ID
+	m.Title = r.Name
+	m.Date = r.FirstAirDate
+	m.TMDbURL = fmt.Sprintf(tmdbURLFmt, r.MediaType, r.ID)
+	return &m
 }

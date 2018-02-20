@@ -30,4 +30,4 @@
 
 [[override]]
   branch = "master"
-  name = "github.com/ryanbradynd05/go-tmdb"
+  name = "github.com/magunetto/go-tmdb"

@@ -10,10 +10,11 @@ import (
 )
 
 const (
-	ranked = true            // Should results be ranked
-	sort   = "seeders"       // Sort order (seeders, leechers, last)
-	format = "json_extended" // Format (json, json_extended)
-	limit  = 25              // Limit of results (25, 50, 100)
+	app    = "moviemagnetbot" // app name is required
+	ranked = true             // Should results be ranked
+	sort   = "seeders"        // Sort order (seeders, leechers, last)
+	format = "json_extended"  // Format (json, json_extended)
+	limit  = 25               // Limit of results (25, 50, 100)
 )
 
 var (
@@ -25,7 +26,7 @@ var (
 
 // InitRARBG init RARBG API
 func InitRARBG() {
-	api, err := rarbg.Init()
+	api, err := rarbg.Init(app)
 	if err != nil {
 		log.Fatalf("error while querying rarbg: %s", err)
 	}

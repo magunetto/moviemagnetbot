@@ -17,8 +17,8 @@
     "orm",
     "types"
   ]
-  revision = "eff1632b1caea7c554b174d5551ff2791021810c"
-  version = "v6.9.3"
+  revision = "24dfe0572921e42ffe1035f7afbd40f9d97cb8c8"
+  version = "v6.10.0"
 
 [[projects]]
   name = "github.com/gorilla/context"
@@ -29,8 +29,8 @@
 [[projects]]
   name = "github.com/gorilla/feeds"
   packages = ["."]
-  revision = "4b936b5221c53c99fcd4b15ac0b8c38ff490ab89"
-  version = "v1.0.0"
+  revision = "6edcbcd2d57fd0bbd7f39947a593ed0c06648388"
+  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/gorilla/mux"
@@ -42,7 +42,7 @@
   branch = "master"
   name = "github.com/jinzhu/inflection"
   packages = ["."]
-  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
+  revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
   branch = "master"
@@ -54,7 +54,7 @@
   branch = "master"
   name = "github.com/magunetto/go-torrentapi"
   packages = ["."]
-  revision = "e889fd3f2262dba045600df88bc86f56393a7a4b"
+  revision = "ac6c8fa48a889f462e2e813b265a39c9189b4c6a"
 
 [[projects]]
   name = "github.com/pkg/errors"

@@ -17,9 +17,10 @@ import (
 
 const (
 	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
-	replyNoIMDbIDs  = "We encountered an error while finding IMDb IDs for you: "
-	replyNoPubStamp = "We could not find this magnet link, please check your input"
-	replyNoTorrent  = "We encountered an error while finding this magnet link"
+	replyBePrivate  = "Sorry, please talk to me in private message"
+	replyNoIMDbIDs  = "An error occurred while finding IMDb IDs for you: "
+	replyNoPubStamp = "Could not find this magnet link, please check your input"
+	replyNoTorrent  = "An error occurred while finding this magnet link"
 	replyFeedTips   = "Auto-download every link you requested by subscribing your RSS feed: `%s`"
 	replyTaskAdded  = "Task added to your feed, it will start soon"
 
@@ -56,19 +57,22 @@ func Run() {
 		}
 	})
 	b.Handle(telebot.OnText, func(m *telebot.Message) {
-		sender := getUserName(m.Sender)
-		if m.Chat.Type != telebot.ChatPrivate {
-			sender += fmt.Sprintf(" @ %s", m.Chat.Title)
+		if !isPrivateChat(m) {
+			_, err = b.Send(m.Chat, replyBePrivate)
+			if err != nil {
+				log.Printf("error while sending message: %s", err)
+			}
+			return
 		}
+
+		sender := getUserName(m.Sender)
 		log.Printf("%s: %s", sender, m.Text)
 
-		// download requst
-		if strings.HasPrefix(m.Text, cmdPrefixDown) {
+		if isDownloadRequest(m.Text) {
 			downloadHandler(b, m)
 			return
 		}
-		// tmdb search
-		if strings.HasPrefix(m.Text, cmdPrefixTMDb) {
+		if isTMDbTorrentSearchRequest(m.Text) {
 			tmdbTorrentSearchHandler(b, m)
 			return
 		}
@@ -79,6 +83,18 @@ func Run() {
 
 	// bot loop
 	b.Start()
+}
+
+func isPrivateChat(m *telebot.Message) bool {
+	return m.Chat.Type == telebot.ChatPrivate
+}
+
+func isDownloadRequest(s string) bool {
+	return strings.HasPrefix(s, cmdPrefixDown)
+}
+
+func isTMDbTorrentSearchRequest(s string) bool {
+	return strings.HasPrefix(s, cmdPrefixTMDb)
 }
 
 func downloadHandler(b *telebot.Bot, m *telebot.Message) {

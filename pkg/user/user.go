@@ -124,6 +124,19 @@ func (u *User) CountTorrents() (int, error) {
 	return res, nil
 }
 
+// ClearTorrents clear User Torrent history
+func (u *User) ClearTorrents() (int, error) {
+	u, err := u.getByTelegramID()
+	if err != nil {
+		return 0, err
+	}
+	res, err := db.DB.Model((*UserTorrent)(nil)).Where("user_id = ?", u.ID).Delete()
+	if err != nil {
+		return 0, err
+	}
+	return res.RowsAffected(), nil
+}
+
 func (u *User) update() error {
 	return db.DB.Update(u)
 }

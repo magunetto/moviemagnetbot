@@ -17,7 +17,9 @@ import (
 
 const (
 	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
-	replyHistory    = "You have downloaded %d torrents"
+	replyHistory    = "You have downloaded %d torrents. Do you want to clear the history? Please choose /cancel or /clear"
+	replyCancel     = "Action canceled"
+	replyClear      = "%d torrents deleted"
 	replyBePrivate  = "Sorry, please talk to me in private message"
 	replyNoIMDbIDs  = "An error occurred while finding IMDb IDs for you: "
 	replyNoPubStamp = "Could not find this magnet link, please check your input"
@@ -64,6 +66,23 @@ func Run() {
 			log.Printf("error while counting torrents for user: %s", err)
 		}
 		_, err = b.Send(m.Chat, fmt.Sprintf(replyHistory, num))
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
+	})
+	b.Handle("/cancel", func(m *telebot.Message) {
+		_, err := b.Send(m.Chat, replyCancel)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
+	})
+	b.Handle("/clear", func(m *telebot.Message) {
+		u := &user.User{TelegramID: m.Sender.ID}
+		num, err := u.ClearTorrents()
+		if err != nil {
+			log.Printf("error while clearing torrents for user: %s", err)
+		}
+		_, err = b.Send(m.Chat, fmt.Sprintf(replyClear, num))
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}

@@ -17,6 +17,7 @@ import (
 
 const (
 	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
+	replyHistory    = "You have downloaded %d torrents"
 	replyBePrivate  = "Sorry, please talk to me in private message"
 	replyNoIMDbIDs  = "An error occurred while finding IMDb IDs for you: "
 	replyNoPubStamp = "Could not find this magnet link, please check your input"
@@ -52,6 +53,17 @@ func Run() {
 	})
 	b.Handle("/help", func(m *telebot.Message) {
 		_, err := b.Send(m.Chat, replyHelp)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
+	})
+	b.Handle("/history", func(m *telebot.Message) {
+		u := &user.User{TelegramID: m.Sender.ID}
+		num, err := u.CountTorrents()
+		if err != nil {
+			log.Printf("error while counting torrents for user: %s", err)
+		}
+		_, err = b.Send(m.Chat, fmt.Sprintf(replyHistory, num))
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}

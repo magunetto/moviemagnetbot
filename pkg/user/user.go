@@ -111,6 +111,19 @@ func (u *User) getTorrents(limit int) ([]torrent.Torrent, error) {
 	return u.Torrents, err
 }
 
+// CountTorrents count User Torrents
+func (u *User) CountTorrents() (int, error) {
+	u, err := u.getByTelegramID()
+	if err != nil {
+		return 0, err
+	}
+	res, err := db.DB.Model((*UserTorrent)(nil)).Where("user_id = ?", u.ID).Count()
+	if err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
 func (u *User) update() error {
 	return db.DB.Update(u)
 }

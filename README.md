@@ -9,24 +9,23 @@
 ## Features
 
 - Search movies and TVs and magnet links of them
-- Download them automatically by one tap
+- Download them automatically
+- View and clear download history
 
-*[See complete list and future plans](https://github.com/magunetto/moviemagnetbot/wiki/Features)*
+*[Video example 1](https://t.me/moviemagnet/6), [Video example 2](https://t.me/moviemagnet/7)*
+
+*[Complete feature list and future plans](https://github.com/magunetto/moviemagnetbot/wiki/Features)*
 
 ## Usage
 
 - Talk to [@moviemagnetbot](https://t.me/moviemagnetbot) on Telegram
 - Subscribe personal RSS feed in download tools
 
-## Community
+## Get involved
 
-- [@moviemagnet](https://t.me/moviemagnet) channel on Telegram
-- [@moviemagnetusers](https://t.me/moviemagnetusers) group on Telegram
-
-## Contributing
-
-- Add your thoughts of [features](https://github.com/magunetto/moviemagnetbot/wiki/Features).
-- Fork this project, issues and pull requests are welcome.
+- Join our [channel](https://t.me/moviemagnet) and [user group](https://t.me/moviemagnetusers) on Telegram
+- [Open an issue](https://github.com/magunetto/moviemagnetbot/issues/new) when you have an idea or found a bug
+- Open a pull request when you improved something
 
 ## Alternatives
 

@@ -17,9 +17,9 @@ import (
 
 const (
 	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
-	replyHistory    = "You have downloaded %d torrents. Do you want to clear the history? Please choose /cancel or /clear"
+	replyHistory    = "You have downloaded %d magnet links. Do you want to clear the history? This will also clear your RSS feed. Please choose /cancel or /clear"
 	replyCancel     = "Action canceled"
-	replyClear      = "%d torrents deleted"
+	replyClear      = "%d magnet links deleted"
 	replyBePrivate  = "Sorry, please talk to me in private message"
 	replyNoIMDbIDs  = "An error occurred while finding IMDb IDs for you: "
 	replyNoPubStamp = "Could not find this magnet link, please check your input"

@@ -24,7 +24,7 @@
 ## Get involved
 
 - Join our [channel](https://t.me/moviemagnet) and [user group](https://t.me/moviemagnetusers) on Telegram
-- [Open an issue](https://github.com/magunetto/moviemagnetbot/issues/new) when you have an idea or found a bug
+- [Open an issue](https://github.com/magunetto/moviemagnetbot/issues/new/choose) when you have an idea or found a bug
 - Open a pull request when you improved something
 
 ## Alternatives

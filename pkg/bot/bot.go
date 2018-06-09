@@ -31,8 +31,6 @@ const (
 	cmdPrefixDown = "/dl"
 	cmdPrefixTMDb = "/tmdb"
 
-	magnetPrefix = "magnet:?"
-
 	itemsInMovieResult   = 5
 	itemsInTorrentResult = 10
 )
@@ -110,8 +108,8 @@ func Run() {
 			tmdbTorrentSearchHandler(b, m)
 			return
 		}
-		if isMagnetLink(m.Text) {
-			magnetLinkAddHandler(b, m)
+		if isMagnetLink(m.Text) || isED2kLink(m.Text) {
+			linkAddHandler(b, m)
 			return
 		}
 
@@ -133,10 +131,6 @@ func isDownloadRequest(s string) bool {
 
 func isTMDbTorrentSearchRequest(s string) bool {
 	return strings.HasPrefix(s, cmdPrefixTMDb)
-}
-
-func isMagnetLink(s string) bool {
-	return strings.HasPrefix(s, magnetPrefix)
 }
 
 func downloadHandler(b *telebot.Bot, m *telebot.Message) {
@@ -209,16 +203,19 @@ func searchHandler(b *telebot.Bot, m *telebot.Message) {
 		return
 	}
 
-	// No IMDb found in message, take it as keyword to search movies or TVs
-	if len(imdbIDs) == 0 {
-		movieSearchHandler(b, m)
+	if len(imdbIDs) != 0 {
+		for _, id := range imdbIDs {
+			imdbTorrentSearchHandler(b, m, id)
+		}
 		return
 	}
 
-	// Found IMDbs, search torrents for each of them
-	for _, id := range imdbIDs {
-		imdbTorrentSearchHandler(b, m, id)
+	if isHTTPLink(m.Text) || isFTPLink(m.Text) {
+		linkAddHandler(b, m)
+		return
 	}
+
+	movieSearchHandler(b, m)
 }
 
 func getUserName(user *telebot.User) string {

@@ -158,7 +158,7 @@ func (u *User) GenerateFeed() (string, error) {
 		return "", err
 	}
 	for _, t := range torrents {
-		if t.IsFromMangnet() {
+		if t.Title == "" {
 			t.Title = t.Magnet
 		}
 

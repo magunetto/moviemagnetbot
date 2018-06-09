@@ -26,8 +26,8 @@ func tmdbTorrentSearchHandler(b *telebot.Bot, m *telebot.Message) {
 	torrentResultHandler(buf, b, m)
 }
 
-func magnetLinkAddHandler(b *telebot.Bot, m *telebot.Message) {
-	t, err := torrent.SaveTorrentFromMagnet(m.Text)
+func linkAddHandler(b *telebot.Bot, m *telebot.Message) {
+	t, err := torrent.SaveTorrentFromLink(m.Text)
 	if err != nil {
 		log.Printf("error while adding magnet link: %s", err)
 		_, err = b.Send(m.Chat, replyNotAdded)

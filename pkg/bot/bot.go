@@ -16,16 +16,16 @@ import (
 )
 
 const (
-	replyHelp       = "What movies do you like? Try me with the title, or just send the IMDb / Douban links"
-	replyHistory    = "You have downloaded %d magnet links. Do you want to clear the history? This will also clear your RSS feed. Please choose /cancel or /clear"
+	replyHelp       = "Try me with movie titles, actor names, or IMDb / Douban links, or any file links"
+	replyHistory    = "You have %d download tasks. Do you want to clear the history? This will also clear your RSS feed. Please choose /cancel or /clear"
 	replyCancel     = "Action canceled"
-	replyClear      = "%d magnet links deleted"
+	replyClear      = "%d tasks deleted"
 	replyBePrivate  = "Sorry, please talk to me in private message"
 	replyNoIMDbIDs  = "An error occurred while finding IMDb IDs for you: "
 	replyNoPubStamp = "Could not find this magnet link, please check your input"
 	replyNoTorrent  = "An error occurred while finding this magnet link"
-	replyNotAdded   = "An error occurred while adding this magnet link"
-	replyFeedTips   = "Auto-download every link you requested by subscribing your RSS feed: `%s`"
+	replyNotAdded   = "An error occurred while adding this link"
+	replyFeedTips   = "Auto-download every link by subscribing your RSS feed: `%s`"
 	replyTaskAdded  = "Task added to your feed, it will start soon"
 
 	cmdPrefixDown = "/dl"

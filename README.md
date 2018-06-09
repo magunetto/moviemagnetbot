@@ -6,32 +6,40 @@
 [![Coverage Status](https://coveralls.io/repos/github/magunetto/moviemagnetbot/badge.svg?branch=master)](https://coveralls.io/github/magunetto/moviemagnetbot?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/magunetto/moviemagnetbot)](https://goreportcard.com/report/github.com/magunetto/moviemagnetbot)
 
-## Features
+## What can I do with this bot
 
-- Search movies and TVs and magnet links of them
-- Download them automatically
+- Search information about movies and TVs
+- Search magnet links of movies and TVs and download them
+- Download any links (Magnet/eD2k/HTTP/FTP) automatically
 - View and clear download history
-
-*[Video example 1](https://t.me/moviemagnet/6), [Video example 2](https://t.me/moviemagnet/7)*
 
 *[Complete feature list and future plans](https://github.com/magunetto/moviemagnetbot/wiki/Features)*
 
-## Usage
+## How to use it
 
 - Talk to [@moviemagnetbot](https://t.me/moviemagnetbot) on Telegram
 - Subscribe personal RSS feed in download tools
 
-## Get involved
+*[Video example 1](https://t.me/moviemagnet/6), [Video example 2](https://t.me/moviemagnet/7)*
+
+## Ways to get involved
 
 - Join our [channel](https://t.me/moviemagnet) and [user group](https://t.me/moviemagnetusers) on Telegram
 - [Open an issue](https://github.com/magunetto/moviemagnetbot/issues/new/choose) when you have an idea or found a bug
-- Open a pull request when you improved something
 
-## Develop
+## How to contribute
 
+1. Have Go and `dep` installed
+1. Fork it and start hacking
+
+    ```bash
+    cd moviemagnetbot
     dep ensure -v
     cd cmd/moviemagnetbot
     go build && PORT="8000" ./moviemagnetbot
+    ```
+
+1. Open a pull request when you improved something
 
 ## Alternatives
 

@@ -27,6 +27,12 @@
 - [Open an issue](https://github.com/magunetto/moviemagnetbot/issues/new/choose) when you have an idea or found a bug
 - Open a pull request when you improved something
 
+## Develop
+
+    dep ensure -v
+    cd cmd/moviemagnetbot
+    go build && PORT="8000" ./moviemagnetbot
+
 ## Alternatives
 
 - [Netflix](https://www.netflix.com/)

@@ -158,6 +158,10 @@ func (u *User) GenerateFeed() (string, error) {
 		return "", err
 	}
 	for _, t := range torrents {
+		if t.IsFromMangnet() {
+			t.Title = t.Magnet
+		}
+
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:   t.Title,
 			Link:    &feeds.Link{Href: t.Magnet},

@@ -24,11 +24,14 @@ const (
 	replyNoIMDbIDs  = "An error occurred while finding IMDb IDs for you: "
 	replyNoPubStamp = "Could not find this magnet link, please check your input"
 	replyNoTorrent  = "An error occurred while finding this magnet link"
+	replyNotAdded   = "An error occurred while adding this magnet link"
 	replyFeedTips   = "Auto-download every link you requested by subscribing your RSS feed: `%s`"
 	replyTaskAdded  = "Task added to your feed, it will start soon"
 
 	cmdPrefixDown = "/dl"
 	cmdPrefixTMDb = "/tmdb"
+
+	magnetPrefix = "magnet:?"
 
 	itemsInMovieResult   = 5
 	itemsInTorrentResult = 10
@@ -107,6 +110,10 @@ func Run() {
 			tmdbTorrentSearchHandler(b, m)
 			return
 		}
+		if isMagnetLink(m.Text) {
+			magnetLinkAddHandler(b, m)
+			return
+		}
 
 		// search request
 		searchHandler(b, m)
@@ -126,6 +133,10 @@ func isDownloadRequest(s string) bool {
 
 func isTMDbTorrentSearchRequest(s string) bool {
 	return strings.HasPrefix(s, cmdPrefixTMDb)
+}
+
+func isMagnetLink(s string) bool {
+	return strings.HasPrefix(s, magnetPrefix)
 }
 
 func downloadHandler(b *telebot.Bot, m *telebot.Message) {
@@ -159,12 +170,16 @@ func downloadHandler(b *telebot.Bot, m *telebot.Message) {
 		log.Printf("error while sending message: %s", err)
 	}
 
-	// save the torrent for user
+	saveTorrentForUser(b, m, t)
+}
+
+func saveTorrentForUser(b *telebot.Bot, m *telebot.Message, t *torrent.Torrent) {
 	u := &user.User{
 		TelegramID:   m.Sender.ID,
 		TelegramName: getUserName(m.Sender),
 	}
-	err = u.AppendTorrent(t)
+
+	err := u.AppendTorrent(t)
 	if err != nil {
 		log.Printf("error while adding torrent for user: %s", err)
 		return

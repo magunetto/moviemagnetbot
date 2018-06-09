@@ -26,6 +26,19 @@ func tmdbTorrentSearchHandler(b *telebot.Bot, m *telebot.Message) {
 	torrentResultHandler(buf, b, m)
 }
 
+func magnetLinkAddHandler(b *telebot.Bot, m *telebot.Message) {
+	t, err := torrent.SaveTorrentFromMagnet(m.Text)
+	if err != nil {
+		log.Printf("error while adding magnet link: %s", err)
+		_, err = b.Send(m.Chat, replyNotAdded)
+		if err != nil {
+			log.Printf("error while sending message: %s", err)
+		}
+		return
+	}
+	saveTorrentForUser(b, m, t)
+}
+
 func torrentResultHandler(s fmt.Stringer, b *telebot.Bot, m *telebot.Message) {
 	_, err := b.Send(m.Chat, s.String(), &telebot.SendOptions{ParseMode: telebot.ModeMarkdown})
 	if err != nil {

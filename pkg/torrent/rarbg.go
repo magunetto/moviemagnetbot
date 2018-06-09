@@ -76,7 +76,7 @@ func newTorrentsBySearch(trs *rarbg.TorrentResults, limit int) (*[]Torrent, erro
 		if i == limit {
 			break
 		}
-		t, err := saveTorrent(tr)
+		t, err := saveTorrentFromRARBG(tr)
 		if err != nil {
 			continue
 		}
@@ -86,7 +86,7 @@ func newTorrentsBySearch(trs *rarbg.TorrentResults, limit int) (*[]Torrent, erro
 	return &torrents, nil
 }
 
-func saveTorrent(tr rarbg.TorrentResult) (*Torrent, error) {
+func saveTorrentFromRARBG(tr rarbg.TorrentResult) (*Torrent, error) {
 
 	t := &Torrent{TorrentResult: tr}
 	if tr.Title == "" {

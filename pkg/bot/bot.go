@@ -17,7 +17,8 @@ import (
 
 const (
 	replyHelp       = "Try me with movie titles, actor names, or IMDb / Douban links, or any file links"
-	replyHistory    = "You have %d download tasks. Do you want to clear the history? This will also clear your RSS feed. Please choose /cancel or /clear"
+	replyNoHistory  = "You have no download tasks, go get some"
+	replyHistory    = "You have %d download tasks. Do you want to clear them? This will also clear your RSS feed. Please choose /cancel or /clear"
 	replyCancel     = "Action canceled"
 	replyClear      = "%d tasks deleted"
 	replyBePrivate  = "Sorry, please talk to me in private message"
@@ -66,7 +67,11 @@ func Run() {
 		if err != nil {
 			log.Printf("error while counting torrents for user: %s", err)
 		}
-		_, err = b.Send(m.Chat, fmt.Sprintf(replyHistory, num))
+		if num == 0 {
+			_, err = b.Send(m.Chat, fmt.Sprintf(replyNoHistory))
+		} else {
+			_, err = b.Send(m.Chat, fmt.Sprintf(replyHistory, num))
+		}
 		if err != nil {
 			log.Printf("error while sending message: %s", err)
 		}

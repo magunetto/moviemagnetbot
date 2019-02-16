@@ -215,7 +215,7 @@ func searchHandler(b *telebot.Bot, m *telebot.Message) {
 		return
 	}
 
-	if isHTTPLink(m.Text) || isFTPLink(m.Text) {
+	if isFTPLink(m.Text) {
 		linkAddHandler(b, m)
 		return
 	}

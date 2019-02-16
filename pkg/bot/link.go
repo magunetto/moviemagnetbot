@@ -5,8 +5,6 @@ import "strings"
 const (
 	magnetPrefix = "magnet:?"
 	eD2kPrefix   = "ed2k://"
-	httpPrefix   = "http://"
-	httpsPrefix  = "https://"
 	ftpPrefix    = "ftp://"
 )
 
@@ -17,11 +15,6 @@ func isMagnetLink(s string) bool {
 func isED2kLink(s string) bool {
 	return strings.HasPrefix(strings.ToLower(s), eD2kPrefix)
 }
-
-func isHTTPLink(s string) bool {
-	return strings.HasPrefix(strings.ToLower(s), httpPrefix) || strings.HasPrefix(strings.ToLower(s), httpsPrefix)
-}
-
 func isFTPLink(s string) bool {
 	return strings.HasPrefix(strings.ToLower(s), ftpPrefix)
 }

@@ -2,12 +2,15 @@
 
 
 [[projects]]
+  digest = "1:56c130d885a4aacae1dd9c7b71cfe39912c7ebc1ff7d2b46083c8812996dc43b"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
+  pruneopts = ""
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
 
 [[projects]]
+  digest = "1:5957c39aeb0926f8c1ef107a5062adb0b03958458e8b03021034727c0434cd0d"
   name = "github.com/go-pg/pg"
   packages = [
     ".",
@@ -15,80 +18,113 @@
     "internal/parser",
     "internal/pool",
     "orm",
-    "types"
+    "types",
   ]
+  pruneopts = ""
   revision = "24dfe0572921e42ffe1035f7afbd40f9d97cb8c8"
   version = "v6.10.0"
 
 [[projects]]
+  digest = "1:20ed7daa9b3b38b6d1d39b48ab3fd31122be5419461470d0c28de3e121c93ecf"
   name = "github.com/gorilla/context"
   packages = ["."]
+  pruneopts = ""
   revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
   version = "v1.1"
 
 [[projects]]
+  digest = "1:e5f540dcaad8557b2dff546fff654a14fe533273fb65b517ee6731889b7d5421"
   name = "github.com/gorilla/feeds"
   packages = ["."]
+  pruneopts = ""
   revision = "6edcbcd2d57fd0bbd7f39947a593ed0c06648388"
   version = "v1.1.0"
 
 [[projects]]
+  digest = "1:aa016bbb412f496a7baed9e02787a60cd15c9a3edfa72da9c4a95d6cea610334"
   name = "github.com/gorilla/mux"
   packages = ["."]
+  pruneopts = ""
   revision = "53c1911da2b537f792e7cafcb446b05ffe33b996"
   version = "v1.6.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:d9a7385b84d8187fd94e0357045c6fa1147ca94caa56fdd539336c7c102fc728"
   name = "github.com/jinzhu/inflection"
   packages = ["."]
+  pruneopts = ""
   revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
   branch = "master"
+  digest = "1:6405d2c8c3fdd12f01f5182069a67466e8addc714084191b8d8746f722e22b3f"
   name = "github.com/magunetto/go-tmdb"
   packages = ["."]
+  pruneopts = ""
   revision = "4f88bfd8260f14f544c0c47e81d07ec4d3685db6"
 
 [[projects]]
   branch = "master"
+  digest = "1:5ea1f4478d11901d62f19c6c101fb3945ef2fe55777dcbfc00c9f9717f93d71b"
   name = "github.com/magunetto/go-torrentapi"
   packages = ["."]
+  pruneopts = ""
   revision = "ac6c8fa48a889f462e2e813b265a39c9189b4c6a"
 
 [[projects]]
+  digest = "1:7365acd48986e205ccb8652cc746f09c8b7876030d53710ea6ef7d0bd0dcd7ca"
   name = "github.com/pkg/errors"
   packages = ["."]
+  pruneopts = ""
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
 
 [[projects]]
+  digest = "1:256484dbbcd271f9ecebc6795b2df8cad4c458dd0f5fd82a8c2fa0c29f233411"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
+  pruneopts = ""
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:397c373c96fad9cf19c453db9fdd2b902f854e41d0c8f0eb17fcf50282763b22"
   name = "github.com/speps/go-hashids"
   packages = ["."]
+  pruneopts = ""
   revision = "c6ced3330f133cec79e144fb11b2e4c5154059ae"
 
 [[projects]]
+  digest = "1:a30066593578732a356dc7e5d7f78d69184ca65aeeff5939241a3ab10559bb06"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
+  pruneopts = ""
   revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
   version = "v1.2.1"
 
 [[projects]]
   branch = "v2"
+  digest = "1:c4d8697d8eb79d903ba90d18d70ccdf92eb1e458570b605bf6ca5ec2d62fdf3e"
   name = "gopkg.in/tucnak/telebot.v2"
   packages = ["."]
+  pruneopts = ""
   revision = "24146200389c0856503e7f9a40d21170e55692a2"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "afbedc3e0457fc1f9bdfaf8c0f205f16282fff1252d099ea4523a3220d734b95"
+  input-imports = [
+    "github.com/go-pg/pg",
+    "github.com/go-pg/pg/orm",
+    "github.com/gorilla/feeds",
+    "github.com/gorilla/mux",
+    "github.com/magunetto/go-tmdb",
+    "github.com/magunetto/go-torrentapi",
+    "github.com/speps/go-hashids",
+    "github.com/stretchr/testify/assert",
+    "gopkg.in/tucnak/telebot.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

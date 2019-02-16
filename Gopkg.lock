@@ -2,35 +2,30 @@
 
 
 [[projects]]
-  digest = "1:56c130d885a4aacae1dd9c7b71cfe39912c7ebc1ff7d2b46083c8812996dc43b"
+  digest = "1:0deddd908b6b4b768cfc272c16ee61e7088a60f7fe2f06c547bd3d8e1f8b8e77"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   pruneopts = ""
-  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
-  version = "v1.1.0"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
 
 [[projects]]
-  digest = "1:5957c39aeb0926f8c1ef107a5062adb0b03958458e8b03021034727c0434cd0d"
+  digest = "1:9620496fe4bd354f59c293c0aa95afa21ea62c187dd63c82b30613f3458517bc"
   name = "github.com/go-pg/pg"
   packages = [
     ".",
     "internal",
+    "internal/iszero",
     "internal/parser",
     "internal/pool",
+    "internal/struct_filter",
+    "internal/tag",
     "orm",
     "types",
   ]
   pruneopts = ""
-  revision = "24dfe0572921e42ffe1035f7afbd40f9d97cb8c8"
-  version = "v6.10.0"
-
-[[projects]]
-  digest = "1:20ed7daa9b3b38b6d1d39b48ab3fd31122be5419461470d0c28de3e121c93ecf"
-  name = "github.com/gorilla/context"
-  packages = ["."]
-  pruneopts = ""
-  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
-  version = "v1.1"
+  revision = "750698e034bbc0f35e33e69df35cd8cc4c6b7d3d"
+  version = "v7.1.7"
 
 [[projects]]
   digest = "1:e5f540dcaad8557b2dff546fff654a14fe533273fb65b517ee6731889b7d5421"
@@ -41,12 +36,12 @@
   version = "v1.1.0"
 
 [[projects]]
-  digest = "1:aa016bbb412f496a7baed9e02787a60cd15c9a3edfa72da9c4a95d6cea610334"
+  digest = "1:a3c01bbe8766cbce019cdb900aa51460a6f7bd4266a18d80722dc92297302bc3"
   name = "github.com/gorilla/mux"
   packages = ["."]
   pruneopts = ""
-  revision = "53c1911da2b537f792e7cafcb446b05ffe33b996"
-  version = "v1.6.1"
+  revision = "a7962380ca08b5a188038c69871b8d3fbdf31e89"
+  version = "v1.7.0"
 
 [[projects]]
   branch = "master"
@@ -73,12 +68,12 @@
   revision = "ac6c8fa48a889f462e2e813b265a39c9189b4c6a"
 
 [[projects]]
-  digest = "1:7365acd48986e205ccb8652cc746f09c8b7876030d53710ea6ef7d0bd0dcd7ca"
+  digest = "1:1d7e1867c49a6dd9856598ef7c3123604ea3daabf5b83f303ff457bcbc410b1d"
   name = "github.com/pkg/errors"
   packages = ["."]
   pruneopts = ""
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
 
 [[projects]]
   digest = "1:256484dbbcd271f9ecebc6795b2df8cad4c458dd0f5fd82a8c2fa0c29f233411"
@@ -90,27 +85,43 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:397c373c96fad9cf19c453db9fdd2b902f854e41d0c8f0eb17fcf50282763b22"
+  digest = "1:f820251ce7e7a0896b717f1f49eb1ab8c64e96f5f613b5f11e83dc4655d688e6"
   name = "github.com/speps/go-hashids"
   packages = ["."]
   pruneopts = ""
-  revision = "c6ced3330f133cec79e144fb11b2e4c5154059ae"
+  revision = "6ba254bc2e328fdc3fca46bfbccea4ab8052755f"
 
 [[projects]]
-  digest = "1:a30066593578732a356dc7e5d7f78d69184ca65aeeff5939241a3ab10559bb06"
+  digest = "1:381bcbeb112a51493d9d998bbba207a529c73dbb49b3fd789e48c63fac1f192c"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
   pruneopts = ""
-  revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
-  version = "v1.2.1"
+  revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
+  version = "v1.3.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:5462386895a322b94a79a5de7314310edbd5f4d15f851ae032f146b2c951b3de"
+  name = "golang.org/x/crypto"
+  packages = ["pbkdf2"]
+  pruneopts = ""
+  revision = "74369b46fc6756741c016591724fd1cb8e26845f"
 
 [[projects]]
   branch = "v2"
-  digest = "1:c4d8697d8eb79d903ba90d18d70ccdf92eb1e458570b605bf6ca5ec2d62fdf3e"
+  digest = "1:6dabb16b1b5c8ed2d7f419ebf04e8de68480de0e78269f2a51930548f2b60d76"
   name = "gopkg.in/tucnak/telebot.v2"
   packages = ["."]
   pruneopts = ""
-  revision = "24146200389c0856503e7f9a40d21170e55692a2"
+  revision = "e6cfaa833930549e4d3aff4af1b9d502b2114d52"
+
+[[projects]]
+  digest = "1:70b0b4531f255ded5a2d15f61c21d83e4d9f5b798adc26cc751fc96d0d94a9d4"
+  name = "mellium.im/sasl"
+  packages = ["."]
+  pruneopts = ""
+  revision = "e58e780e1378aa4df5dc705364ff5ae9a4dd1e04"
+  version = "v0.2.1"
 
 [solve-meta]
   analyzer-name = "dep"

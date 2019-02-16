@@ -10,7 +10,7 @@
 
 - Search information about movies and TVs
 - Search magnet links of movies and TVs and download them
-- Download any links (Magnet/eD2k/HTTP/FTP) automatically
+- Download any links (Magnet/eD2k/FTP) automatically
 - View and clear download history
 
 *[Complete feature list and future plans](https://github.com/magunetto/moviemagnetbot/wiki/Features)*

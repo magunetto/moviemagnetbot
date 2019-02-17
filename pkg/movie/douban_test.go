@@ -51,7 +51,8 @@ func TestMovieFetchFromDoubanAppURLOK(t *testing.T) {
 
 func TestMovieFetchFromDoubanMobileURLMissingIMDbID(t *testing.T) {
 	m := New()
-	m.FetchFromURL(doubanMobileURL)
+	err := m.FetchFromURL(doubanMobileURL)
+	assert.Equal(t, err, ErrIMDbURLMissing)
 	assert.Equal(t, "", m.IMDbID())
 }
 

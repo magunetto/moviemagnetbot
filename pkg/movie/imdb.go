@@ -22,14 +22,16 @@ func SearchIMDbID(text string) ([]string, error) {
 }
 
 var (
-	reDoubanMovieURL = regexp.MustCompile(`http(s)?\:\/\/movie\.douban\.com\/subject\/[0-9]+`)
-	reDoubanAppURL   = regexp.MustCompile(`http(s)?\:\/\/www\.douban\.com\/doubanapp\/dispatch\?uri\=\/movie\/[0-9]+`)
-	reIMDbID         = regexp.MustCompile(`tt[0-9]{7}`) // e.g. tt0137523
+	reDoubanMovieURL  = regexp.MustCompile(`http(s)?\:\/\/movie\.douban\.com\/subject\/[0-9]+`)
+	reDoubanAppURL    = regexp.MustCompile(`http(s)?\:\/\/www\.douban\.com\/doubanapp\/dispatch\?uri\=\/movie\/[0-9]+`)
+	reDoubanAppNewURL = regexp.MustCompile(`http(s)?\:\/\/www\.douban\.com\/doubanapp\/dispatch\/movie\/[0-9]+`)
+	reIMDbID          = regexp.MustCompile(`tt[0-9]{7}`) // e.g. tt0137523
 )
 
 func findDoubanMovieURLs(s string) (urls []string) {
 	urls = append(urls, reDoubanMovieURL.FindAllString(s, -1)...)
 	urls = append(urls, reDoubanAppURL.FindAllString(s, -1)...)
+	urls = append(urls, reDoubanAppNewURL.FindAllString(s, -1)...)
 	return
 }
 

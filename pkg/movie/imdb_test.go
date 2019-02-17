@@ -16,12 +16,14 @@ func TestFindDoubanMovieURLsMultiple(t *testing.T) {
 		https://movie.douban.com/subject/22265634/?from=showing
 		https://movie.douban.com/subject/22265635/?from=showing
 		https://movie.douban.com/subject/22265636/?from=showing
+		https://www.douban.com/doubanapp/dispatch/movie/20645098?dt_dapp=1
 	`)
-	assert.Len(t, urls, 3)
+	assert.Len(t, urls, 4)
 	assert.Equal(t, []string{
 		"https://movie.douban.com/subject/22265634",
 		"https://movie.douban.com/subject/22265635",
 		"https://movie.douban.com/subject/22265636",
+		"https://www.douban.com/doubanapp/dispatch/movie/20645098",
 	}, urls)
 }
 
@@ -69,7 +71,10 @@ func TestSearchIMDbIDMultipleURLOK(t *testing.T) {
 }
 
 func TestSearchIMDbIDDoubanURLOK(t *testing.T) {
-	ids, err := SearchIMDbID(`https://movie.douban.com/subject/22265634/`)
+	ids, err := SearchIMDbID(`
+		https://movie.douban.com/subject/22265634/
+		https://www.douban.com/doubanapp/dispatch/movie/20645098?dt_dapp=1
+	`)
 	assert.NoError(t, err)
-	assert.Equal(t, []string{"tt2527336"}, ids)
+	assert.Equal(t, []string{"tt2527336", "tt1754656"}, ids)
 }

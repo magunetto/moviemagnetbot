@@ -29,12 +29,11 @@
 
 ## How to contribute
 
-1. Have Go and `dep` installed
+1. Have Go installed
 1. Fork it and start hacking
 
     ```bash
     cd moviemagnetbot
-    dep ensure -v
     cd cmd/moviemagnetbot
     go build && PORT="8000" ./moviemagnetbot
     ```

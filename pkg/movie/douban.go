@@ -8,12 +8,21 @@ import (
 	"regexp"
 )
 
+// userAgent is the User-Agent header for sending HTTP request
+const userAgent = "moviemagnetbot/0.1"
+
 // ErrIMDbURLMissing is error of can not find IMDb URL
 var ErrIMDbURLMissing = errors.New("Can not find IMDb links on the page")
 
 // FetchFromURL fetches movie IMDb from a URL
 func (m *Movie) FetchFromURL(url string) error {
-	res, err := http.Get(url)
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("User-Agent", userAgent)
+	res, err := client.Do(req)
 	if err != nil {
 		return err
 	}

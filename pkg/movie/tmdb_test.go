@@ -30,7 +30,7 @@ func TestSearchMovieAndPersonOK(t *testing.T) {
 
 func TestSearchNoResult(t *testing.T) {
 	InitTMDb()
-	movies, err := Search("abcdefghijklmn", 1)
+	movies, err := Search("aabbcc", 1)
 	assert.Nil(t, movies)
 	assert.Error(t, err, errTMDbSearchNoResult)
 }

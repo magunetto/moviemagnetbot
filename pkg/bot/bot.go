@@ -12,6 +12,7 @@ import (
 
 	"github.com/magunetto/moviemagnetbot/pkg/movie"
 	"github.com/magunetto/moviemagnetbot/pkg/torrent"
+	"github.com/magunetto/moviemagnetbot/pkg/uri"
 	"github.com/magunetto/moviemagnetbot/pkg/user"
 )
 
@@ -113,7 +114,7 @@ func Run() {
 			tmdbTorrentSearchHandler(b, m)
 			return
 		}
-		if isMagnetLink(m.Text) || isED2kLink(m.Text) {
+		if uri.IsMagnet(m.Text) || uri.IsED2k(m.Text) {
 			linkAddHandler(b, m)
 			return
 		}
@@ -215,7 +216,7 @@ func searchHandler(b *telebot.Bot, m *telebot.Message) {
 		return
 	}
 
-	if isFTPLink(m.Text) {
+	if uri.IsFTP(m.Text) {
 		linkAddHandler(b, m)
 		return
 	}

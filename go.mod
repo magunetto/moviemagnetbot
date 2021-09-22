@@ -1,6 +1,6 @@
 module github.com/magunetto/moviemagnetbot
 
-go 1.12
+go 1.17
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -20,4 +20,9 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/tucnak/telebot.v2 v2.0.0-20200120165535-b6c3367fed99
 	mellium.im/sasl v0.2.1 // indirect
+)
+
+require (
+	github.com/pkg/errors v0.8.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 )

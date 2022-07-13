@@ -33,6 +33,8 @@ IMDb link in Comments: "http://www.imdb.com/title/tt2527337" target="_blank" rel
 	doubanURL       = "https://movie.douban.com/subject/1293181/"
 	doubanAppURL    = "https://www.douban.com/doubanapp/dispatch?uri=/movie/1293181/&dt_dapp=1"
 	doubanMobileURL = "https://m.douban.com/movie/subject/1293181/"
+
+	doubanURLWithLongIMDbID = "https://movie.douban.com/subject/33432655/"
 )
 
 func TestMovieFetchFromDoubanURLOK(t *testing.T) {
@@ -47,6 +49,13 @@ func TestMovieFetchFromDoubanAppURLOK(t *testing.T) {
 	err := m.FetchFromURL(doubanAppURL)
 	assert.NoError(t, err)
 	assert.Equal(t, "tt0054215", m.IMDbID())
+}
+
+func TestMovieFetchFromDoubanURLWithLongIMDbIDOK(t *testing.T) {
+	m := New()
+	err := m.FetchFromURL(doubanURLWithLongIMDbID)
+	assert.NoError(t, err)
+	assert.Equal(t, "tt10272386", m.IMDbID())
 }
 
 func TestMovieFetchFromDoubanMobileURLMissingIMDbID(t *testing.T) {

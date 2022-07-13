@@ -37,7 +37,7 @@ func (m *Movie) FetchFromURL(url string) error {
 	return m.parseHTML(pageHTML)
 }
 
-var reIMDbString = regexp.MustCompile(`tt\d{7}`)
+var reIMDbString = regexp.MustCompile(`tt\d{8}|tt\d{7}`)
 
 // parseHTML searches IMDb URL in a HTML
 func (m *Movie) parseHTML(html []byte) error {

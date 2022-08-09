@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/v10"
 
 	"github.com/magunetto/moviemagnetbot/pkg/torrent"
 	"github.com/magunetto/moviemagnetbot/pkg/user"
@@ -14,7 +14,7 @@ func CreateSchema(db *pg.DB) error {
 		&user.User{},
 		&user.UserTorrent{},
 	} {
-		err := db.CreateTable(model, nil)
+		err := db.Model(model).CreateTable(nil)
 		if err != nil {
 			return err
 		}

@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/v10"
 )
 
 // DB is *pg.DB

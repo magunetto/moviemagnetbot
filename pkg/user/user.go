@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-pg/pg/orm"
+	"github.com/go-pg/pg/v10/orm"
 	"github.com/gorilla/feeds"
-	"github.com/speps/go-hashids"
+	"github.com/speps/go-hashids/v2"
 
 	"github.com/magunetto/moviemagnetbot/pkg/db"
 	"github.com/magunetto/moviemagnetbot/pkg/torrent"
@@ -25,10 +25,10 @@ const (
 
 // User (i.e. Downloader)
 type User struct {
-	ID            int
+	ID            int64
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
-	TelegramID    int
+	TelegramID    int64
 	TelegramName  string
 	FeedID        string
 	FeedCheckedAt time.Time
@@ -37,7 +37,7 @@ type User struct {
 
 // UserTorrent is about which user download what torrents
 type UserTorrent struct { // nolint
-	UserID               int
+	UserID               int64
 	TorrentID            int
 	Torrent_DownloadedAt time.Time // nolint
 }
@@ -70,7 +70,7 @@ func (u *User) newFeedID() (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	feed, err := h.Encode([]int{u.TelegramID})
+	feed, err := h.EncodeInt64([]int64{u.TelegramID})
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,8 @@ func (u *User) AppendTorrent(t *torrent.Torrent) error {
 	if err != nil {
 		return err
 	}
-	return db.DB.Insert(&UserTorrent{u.ID, t.ID, time.Now()})
+	_, err = db.DB.Model(&UserTorrent{u.ID, t.ID, time.Now()}).Insert()
+	return err
 }
 
 func (u *User) getTorrents(limit int) ([]torrent.Torrent, error) {
@@ -138,7 +139,8 @@ func (u *User) ClearTorrents() (int, error) {
 }
 
 func (u *User) update() error {
-	return db.DB.Update(u)
+	_, err := db.DB.Model(u).Update()
+	return err
 }
 
 // FeedURL returns User’s feed URL

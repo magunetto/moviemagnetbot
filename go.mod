@@ -16,10 +16,10 @@ require (
 	github.com/onsi/gomega v1.8.1 // indirect
 	github.com/speps/go-hashids v0.0.0-20181022185652-6ba254bc2e32
 	github.com/stretchr/testify v1.3.0
-	golang.org/x/crypto v0.0.0-20190211182817-74369b46fc67 // indirect
+	golang.org/x/crypto v0.0.0-20190320223903-b7391e95e576 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/tucnak/telebot.v2 v2.0.0-20200120165535-b6c3367fed99
-	mellium.im/sasl v0.2.1 // indirect
+	mellium.im/sasl v0.3.1 // indirect
 )
 
 require (
